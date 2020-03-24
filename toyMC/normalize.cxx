@@ -10,12 +10,12 @@ enum RESOLUTION{
 };
 
 static double CentBins[NC+3] = {0,5,10,20,30,40,50,60,70};
-normalize() {
+void normalize() {
 
   double pi = TMath::Pi();
   string name;
-  TFile *f1 = new TFile("lowerv2_35.root");                     // Resolution & smearing histos
-  TFile *f2 = new TFile("normal_lowerv2_35.root", "recreate");  // Output after normalization
+  TFile *f1 = new TFile("github_default-1M.root");                     // Resolution & smearing histos
+  TFile *f2 = new TFile("github_default_1M_norm.root", "recreate");  // Output after normalization
  // TFile *f1 = new TFile("lowerv2_45_true.root");                     // Resolution & smearing histos
  // TFile *f2 = new TFile("normal_lowerv2_45_true.root", "recreate");  // Output after normalization
   TH2D *rawfile[R_COUNT][NC];
@@ -145,4 +145,31 @@ normalize() {
     }
   }
 
+}
+
+void compare_resolution(){
+
+	TFile *fin = TFile::Open("outputs/github_default-1M_norm.root");
+	TFile *falex = TFile::Open("alice/v2_res_V0AC_alice5TeVPbPb_alex.root");
+
+	TH1D *hresolution_V0C = (TH1D*)fin->Get("resolution_V0C");
+	TH1D *hresolution_V0A = (TH1D*)fin->Get("resolution_V0A");
+	TH1D *hResV0C_alex = (TH1D*)falex->Get("hResV0C");
+	TH1D *hResV0A_alex = (TH1D*)falex->Get("hResV0A");
+
+	gStyle->SetOptStat(0);
+	auto c1 = new TCanvas("c1", "Event Plane Resolution n=2");
+	hresolution_V0C->GetXaxis()->SetTitle("Centrality [%]");
+	hresolution_V0C->GetYaxis()->SetTitle("R2");
+
+	hResV0C_alex->SetMarkerStyle(20);
+	hResV0A_alex->SetMarkerStyle(21);
+	hresolution_V0C->SetMarkerStyle(24);
+	hresolution_V0A->SetMarkerStyle(25);
+
+	hresolution_V0C->Draw("p");
+	hresolution_V0A->Draw("psame");
+	hResV0C_alex->Draw("psame");
+	hResV0A_alex->Draw("psame");
+	c1->Update();
 }
