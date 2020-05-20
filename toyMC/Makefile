@@ -1,4 +1,5 @@
 TARGET=resolution
+
 INCS=-I$(shell root-config --incdir)
 LIBS=$(shell root-config --libs)
 all: $(TARGET)

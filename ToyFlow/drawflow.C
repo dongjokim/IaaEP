@@ -15,7 +15,7 @@ void drawflow() {
 
 	double pi = TMath::Pi();
 	string name;
-	TFile *fin = new TFile("results.root");                     // Resolution & smearing histos
+	TFile *fin = new TFile("results.root","read");                     // Resolution & smearing histos
 	TH1D *pah[R_COUNT][NC], *pbh[R_COUNT][NC], *pch[R_COUNT][NC];
 	TH1D *resolution[R_COUNT];
 	TH2D *evpcorr2d[R_COUNT][NC];
