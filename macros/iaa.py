@@ -90,6 +90,9 @@ for it in range(0,pttN-1):
 		plotMatrix[it,ia] = plot.AddTH1(ia,grData,**dataTypePlotParams[0],label="ALICE, 0-5\%");
 		grMarton = fMarton.Get("hIAADeltaEtaC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,startPtaBin+ia));
 		plotMatrixMarton = plot.AddTH1(ia,grMarton,**dataTypePlotParams[1],label="2.76TeV");
+		#gr_sys = fMarton.Get("hIAADeltaEtaSystPointByPointC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,startPtaBin+ia))
+		#_,_,_,yerr = JPyPlotRatio.TGraphErrorsToNumpy(gr_sys);
+		#plot.AddSyst(plotMatrixMarton,yerr);
         #grMarton.Print();
 		for im in range(len(Modelfiles)):	
 			grm = fModel[im].Get("hIAADeltaEtaSigC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,startPtaBin+ia));
