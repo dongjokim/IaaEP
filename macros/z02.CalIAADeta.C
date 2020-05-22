@@ -1,5 +1,6 @@
 
 #include "include/Filipad.h"
+#include "include/rootcommon.h"
 
 TH1D *Flip(TH1D* hin, int idtyp);
 TGraphErrors* get_ratio( TGraphErrors * l, TGraphErrors *r );
@@ -106,6 +107,27 @@ void run2() {
 //	DoAnalysis ("sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root","sysErrors/_Signal_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root");
 }
 
+void runJEWEL() {
+
+	const int Nsets = 1;
+	TString infiles[Nsets] = {
+		"sysErrors/_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+	};
+
+	TObjArray *outString[Nsets];
+	TString outrootname[Nsets];
+	for(int i=0;i<Nsets;i++) { 
+		outString[i] = infiles[i].Tokenize("/");
+		TString sDir = ((TObjString *)outString[i]->At(0))->GetString();
+		TString sName = ((TObjString *)outString[i]->At(1))->GetString();
+		outrootname[i] = Form("%s/Signal%s",sDir.Data(),sName.Data());
+		//cout << outrootname[i] << endl;
+	}
+	for(int i=0;i<1;i++) { 
+		DoAnalysis(infiles[i],outrootname[i]);
+	}
+//	DoAnalysis ("sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root","sysErrors/_Signal_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root");
+}
 
 void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root",  TString oname=""){
 	cout <<"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"<<endl;
@@ -122,7 +144,7 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 	AssocPtBorders             = (TVector*) fin->Get("AssocPtBorders");
 	CentBinBorders             = (TVector*) fin->Get("CentBinBorders");
 
-	int NumCent[2]    = { CentBinBorders->GetNoElements()-2, 1}; 
+	int NumCent[2]    = {1,1};// for jewel { CentBinBorders->GetNoElements()-2, 1}; 
 	int NumPtt     = TriggPtBorders->GetNoElements()-1;
 	int NumPta     = AssocPtBorders->GetNoElements()-1;
 	cout <<"PbPb"<<endl;

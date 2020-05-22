@@ -211,6 +211,47 @@ void runAMPT(){
 	}
 }
 
+void runJEWEL(){
+
+	const int NAA = 1;
+	TString fileAA[NAA] = {
+		"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1744_20200519-0937-JEWEL_0_10_PtHard03.root"
+	};
+	TString dirAA[NAA] = {
+		"JCIaa_KineOnly"
+	};
+	TString commentAA[NAA] = {
+		"JEWEL"
+	};
+
+	const int NPP = 1;
+	TString dirPP[NPP] = {
+		"JCIaa_KineOnly"
+	};
+
+	TString filePP[NPP] = {
+		"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1746_20200521-1142-JEWEL_vacuum_PtHard03.root" 
+	};
+	TString commentPP[NPP] = {
+		"JEWEL vacuum"
+	};
+
+	// Moon
+	const int NR = 1;
+	double dR[NR] = {0.2};
+	double BgRbegin[1] = {1.0};
+	int NBG=1;
+	for(int iA=0;iA<NAA;iA++) { // NAA
+		for(int iP=0;iP<1;iP++) {
+			for(int iR=0;iR<NR;iR++){
+				for( int iB=0;iB<NBG;iB++){
+					DoAnalysis( dR[iR], BgRbegin[iB], 1.6, 1, 0, fileAA[iA],filePP[iP],dirAA[iA],dirPP[iP],commentAA[iA]+"_"+dirAA[iA]+"_"+commentPP[iP] );
+				}
+			}
+		}
+	}
+}
+
 
 void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, double bckScale=1.00, double Side = 0., TString inFile="", TString ppInFile="", TString dirAA, TString dirPP, TString oname=""){
 
@@ -296,7 +337,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	cout <<"pp"<<endl;
 	cout <<"bins:  "<<" eta="<< NumEtaGaps <<" zvtx="<<nzvtx[pp]<< endl; 
 
-	int NumCent[2]    = { CentBinBorders[AA]->GetNoElements()-2, 1};  // 5TEV data less cent 1
+	int NumCent[2]    = {1,1}; // only for jewel { CentBinBorders[AA]->GetNoElements()-2, 1};  // 5TEV data less cent 1
 	NumEtaGaps = EtaGapThresholds[AA]->GetNoElements()-1; 
 	int NumPtt     = TriggPtBorders[AA]->GetNoElements()-1;
 	int NumPta     = AssocPtBorders[AA]->GetNoElements()-1;
