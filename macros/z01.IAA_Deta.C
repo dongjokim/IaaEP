@@ -337,7 +337,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	cout <<"pp"<<endl;
 	cout <<"bins:  "<<" eta="<< NumEtaGaps <<" zvtx="<<nzvtx[pp]<< endl; 
 
-	int NumCent[2]    = {1,1}; // only for jewel { CentBinBorders[AA]->GetNoElements()-2, 1};  // 5TEV data less cent 1
+	int NumCent[2]    = { CentBinBorders[AA]->GetNoElements()-2, 1}; //{1,1}; // only for jewel // 5TEV data less cent 1
 	NumEtaGaps = EtaGapThresholds[AA]->GetNoElements()-1; 
 	int NumPtt     = TriggPtBorders[AA]->GetNoElements()-1;
 	int NumPta     = AssocPtBorders[AA]->GetNoElements()-1;

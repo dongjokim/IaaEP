@@ -144,7 +144,7 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 	AssocPtBorders             = (TVector*) fin->Get("AssocPtBorders");
 	CentBinBorders             = (TVector*) fin->Get("CentBinBorders");
 
-	int NumCent[2]    = {1,1};// for jewel { CentBinBorders->GetNoElements()-2, 1}; 
+	int NumCent[2]    =  { CentBinBorders->GetNoElements()-2, 1}; //{1,1};// for jewel
 	int NumPtt     = TriggPtBorders->GetNoElements()-1;
 	int NumPta     = AssocPtBorders->GetNoElements()-1;
 	cout <<"PbPb"<<endl;
