@@ -1,5 +1,6 @@
 
 #include "include/Filipad.h"
+#include "include/rootcommon.h"
 
 void LoadData();
 void compare();
@@ -16,12 +17,13 @@ double highIAA = 5.2;
 TLatex latexRun;
 TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV";
 
-const int Nsets = 4;
+const int Nsets = 5;
 TString infiles[Nsets] = {
 	"sysErrors/Signal_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_LHC15o_TPCOnly_JCIAA_TPCOnly_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 };
 TFile *fin[Nsets];
 
@@ -29,7 +31,8 @@ TString sLeg[Nsets] = {
 	"LHC10h, TPCOnly",
 	"LHC15o, GlobalSDD",
 	"LHC15o, TPCOnly",
-	"AMPT String melting"
+	"AMPT String melting",
+	"JEWEL 5TeV"
 };
 
 int gMarkers[] = {20,24,21,25,23,27,29,30};
@@ -65,10 +68,13 @@ void LoadData() {
 	TriggPtBorders             = (TVector*) fin[irefD]->Get("TriggPtBorders");
 	AssocPtBorders             = (TVector*) fin[irefD]->Get("AssocPtBorders");
 	CentBinBorders             = (TVector*) fin[irefD]->Get("CentBinBorders");
-	NumCent[AA]    = CentBinBorders->GetNoElements()-2;  // 5TeV 1 less cent
+	NumCent[AA]    = 1;// jewel CentBinBorders->GetNoElements()-2;  // 5TeV 1 less cent
 	NumCent[pp]    = 1; 
 	NPTT     = TriggPtBorders->GetNoElements()-1;
 	NPTA     = AssocPtBorders->GetNoElements()-1;
+	CentBinBorders->Print();
+	TriggPtBorders->Print();
+	AssocPtBorders->Print();
 	cout <<"PbPb"<<endl;
 	cout <<"bins:  c="<<  NumCent[AA] <<" ptt="<< NPTT <<" pta="<< NPTA  << endl; 
 	cout <<"+++++++++++++++++++++++++++++++++++++++++++++++"<<endl;
@@ -109,8 +115,8 @@ void Compare(){
 	int ic=0;
 	for(int iptt=3; iptt<NPTT; iptt++){
 		for(int ipta=1;ipta<NPTA;ipta++) {
-			DrawSignal(ic++,iptt, ipta);
-			//DrawIAA(ic++,iptt, ipta);
+			//DrawSignal(ic++,iptt, ipta);
+			DrawIAA(ic++,iptt, ipta);
 	 	}
 	}
 
