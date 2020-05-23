@@ -87,18 +87,15 @@ void run1Data(){
 }
 
 void run2Data(){
-		const int NAA = 2;
+		const int NAA = 1;
 	TString fileAA[NAA] = {
-		"legotrain_JCIaa/data/JCIaa_legotrain_TPCOnly_CF_PbPb-5275_20180421-1543_runlist_3-LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs.root",
 		"legotrain_JCIaa/data/JCIaa_legotrain_GlobalSDD_CF_PbPb-5146_20180411-2232_runlist_3-LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs.root"
 	};
 	TString dirAA[NAA] = {
-		"JCIAA_TPCOnly",
 		"JCIAA_GlobalSDD"
 		
 	};
 	TString commentAA[NAA] = {
-		"LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5175",
 		"LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146"
 	};
 
@@ -453,23 +450,25 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 
 		cout << " merge after iptt="<< imixptt<<"\t ipta="<< imixpta << endl; 
 		for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
-			for(int ic=0; ic<NumCent[idtyp]; ic++){
-				for(int iz=0; iz<nzvtx[idtyp]; iz++){
-					if(idtyp==AA) {
+			for(int ic=0; ic<NumCent[idtyp]; ic++){				
+				if(idtyp==AA) {
+					for(int iz=0; iz<nzvtx[idtyp]; iz++){ /// !!!!remove first and last bin for systematic error for 10->8cm.
 						for(int iiptt=imixptt+1; iiptt<NumPtt; iiptt++) {
 							for(int iipta=imixpta+1;iipta<NumPta;iipta++) {	
 								hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][imixptt][imixpta]->Add(hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iiptt][iipta]);
 							}
 						}
-					} //AA 
-					if(idtyp==pp) {
+					} // zbins
+				} //AA 
+				if(idtyp==pp) {
+					for(int iz=0; iz<nzvtx[idtyp]; iz++){ 
 						for(int iiptt=imixptt+1; iiptt<NumPtt; iiptt++) {
 							for(int iipta=imixpta+1;iipta<NumPta;iipta++) {	
 								hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][imixptt][imixpta]->Add(hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iiptt][iipta]);
 							}
 						}
-					} // pp 
-				} 
+					}
+				} // pp
 			} 
 		} 
 	} // doMixMerge

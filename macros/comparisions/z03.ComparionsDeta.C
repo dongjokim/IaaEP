@@ -1,10 +1,10 @@
 
 #include "include/Filipad.h"
-#include "include/rootcommon.h"
 
 void LoadData();
 void compare();
 void DrawSignal(int padid, int iPTT, int iPTA);
+void DrawPP(int padID, int iPTT, int iPTA);
 void DrawIAA(int padID, int iPTT, int iPTA);
 
 double lowx=-0.8;
@@ -215,3 +215,52 @@ void DrawIAA(int padID, int iPTT, int iPTA) {
 	}
 	//for(int ic=0;ic<NumCent[AA];ic++) delete fpad[ic];
 }
+
+
+//------------------------------------------------------------------------------------------------
+void DrawPP(int padID, int iPTT, int iPTA) {
+	Filipad *fpad;
+	lowx = -0.01;
+	fpad = new Filipad(padID+1, 1.1, 0.5, 100, 100, 0.7,5);
+	fpad->Draw();
+		//==== Upper pad
+		TPad *p = fpad->GetPad(1); //upper pad
+		p->SetTickx(); p->SetLogx(0); p->SetLogy(0); p->cd();
+		hy = hDeltaEtaSig[iRef][pp][0][iPTT][iPTA]->GetMaximum()*1.2;
+		TH2F *hfr = new TH2F("hfr"," ", 100,lowx, highx, 10, ly, hy); // numbers: tics x, low limit x, upper limit x, tics y, low limit y, upper limit y
+		hset( *hfr, "|#Delta#eta|", "1/N_{trigg} dN/d|#Delta#eta|",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis
+		hfr->Draw();
+		//Legend definition
+		TLegend *leg = new TLegend(0.45,0.4,0.85,0.78,"","brNDC");
+		leg->SetTextSize(0.037);leg->SetBorderSize(0);leg->SetFillStyle(0);//legend settings;
+
+		latexRun.DrawLatexNDC( 0.25, 0.85 ,strRun);
+
+		leg->AddEntry((TObject*)NULL,hDeltaEtaSig[0][pp][0][iPTT][iPTA]->GetTitle(),"");
+
+		
+		hDeltaEtaSig[0][pp][0][iPTT][iPTA]->SetMarkerStyle(gMarkers[0]);
+		hDeltaEtaSig[0][pp][0][iPTT][iPTA]->SetMarkerColor(gColors[0]);
+		hDeltaEtaSig[0][pp][0][iPTT][iPTA]->SetLineColor(gColors[0]);
+		hDeltaEtaSig[0][pp][0][iPTT][iPTA]->Draw("p,same");
+		leg->AddEntry(hDeltaEtaSig[0][pp][0][iPTT][iPTA],"Data pp","pl");
+		hDeltaEtaSig[1][pp][0][iPTT][iPTA]->SetMarkerStyle(gMarkers[1]);
+		hDeltaEtaSig[1][pp][0][iPTT][iPTA]->SetMarkerColor(gColors[1]);
+		hDeltaEtaSig[1][pp][0][iPTT][iPTA]->SetLineColor(gColors[1]);
+		hDeltaEtaSig[1][pp][0][iPTT][iPTA]->Draw("p,same");
+		leg->AddEntry(hDeltaEtaSig[1][pp][0][iPTT][iPTA],"pythia pp","pl");
+		
+		leg->Draw();
+
+		//==== Lower pad
+		p = fpad->GetPad(2);
+		p->SetTickx(); p->SetGridy(1); p->SetLogx(0), p->SetLogy(0); p->cd();
+		TH2F *hfr1 = new TH2F("hfr1"," ", 100, lowx, highx, 10, lowIAA, highIAA);
+		hset( *hfr1, "|#Delta#eta|", "Ratio",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);
+		hfr1->Draw();
+
+		TH1D *hratio = (TH1D*)hDeltaEtaSig[1][pp][0][iPTT][iPTA]->Clone();
+		hratio->Divide(hDeltaEtaSig[0][pp][0][iPTT][iPTA]);
+		hratio->Draw("p,same");
+		//gPad->GetCanvas()->SaveAs(Form("figs/DeltaEta_OUTOIN_C%02dT%02dA%02d.pdf",ic,iPTT,iPTA));
+	}
