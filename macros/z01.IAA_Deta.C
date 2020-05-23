@@ -450,25 +450,23 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 
 		cout << " merge after iptt="<< imixptt<<"\t ipta="<< imixpta << endl; 
 		for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
-			for(int ic=0; ic<NumCent[idtyp]; ic++){				
-				if(idtyp==AA) {
-					for(int iz=0; iz<nzvtx[idtyp]; iz++){ /// !!!!remove first and last bin for systematic error for 10->8cm.
+			for(int ic=0; ic<NumCent[idtyp]; ic++){
+				for(int iz=0; iz<nzvtx[idtyp]; iz++){
+					if(idtyp==AA) {
 						for(int iiptt=imixptt+1; iiptt<NumPtt; iiptt++) {
 							for(int iipta=imixpta+1;iipta<NumPta;iipta++) {	
 								hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][imixptt][imixpta]->Add(hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iiptt][iipta]);
 							}
 						}
-					} // zbins
-				} //AA 
-				if(idtyp==pp) {
-					for(int iz=0; iz<nzvtx[idtyp]; iz++){ 
+					} //AA 
+					if(idtyp==pp) {
 						for(int iiptt=imixptt+1; iiptt<NumPtt; iiptt++) {
 							for(int iipta=imixpta+1;iipta<NumPta;iipta++) {	
 								hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][imixptt][imixpta]->Add(hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iiptt][iipta]);
 							}
 						}
-					}
-				} // pp
+					} // pp 
+				} 
 			} 
 		} 
 	} // doMixMerge
