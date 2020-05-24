@@ -49,7 +49,7 @@ double lowIAA = 0.;
 double highIAA = 2.;
 
 TLatex latexRun;
-TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV";
+TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV";
 
 
 void run2() {
@@ -107,10 +107,34 @@ void run2() {
 //	DoAnalysis ("sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root","sysErrors/_Signal_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root");
 }
 
-void runJEWEL() {
+void run2systematics() {
 
-	const int Nsets = 1;
+	const int Nsets = 3;
 	TString infiles[Nsets] = {
+	    "sysErrors/_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root", // vtx default 10cm
+        "sysErrors/_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146_vtx9_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root", // vtx 9cm
+        "sysErrors/_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146_vtx8_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root" // vtx 8cm
+	};
+
+	TObjArray *outString[Nsets];
+	TString outrootname[Nsets];
+	for(int i=0;i<Nsets;i++) { 
+		outString[i] = infiles[i].Tokenize("/");
+		TString sDir = ((TObjString *)outString[i]->At(0))->GetString();
+		TString sName = ((TObjString *)outString[i]->At(1))->GetString();
+		outrootname[i] = Form("%s/Signal%s",sDir.Data(),sName.Data());
+		//cout << outrootname[i] << endl;
+	}
+	for(int i=0;i<3;i++) { 
+		DoAnalysis(infiles[i],outrootname[i]);
+	}
+}
+
+void runOnflyModel() {
+
+	const int Nsets = 2;
+	TString infiles[Nsets] = {
+		"sysErrors/_MCGen_PbPb_AMPT_5TeV_modPars2_JCIaa_KineOnly_MCGen_pp_amptpp_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 	};
 
