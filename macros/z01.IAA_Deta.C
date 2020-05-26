@@ -253,7 +253,7 @@ void runAMPTOnfly(){
 
 	const int NAA = 1;
 	TString fileAA[NAA] = {
-		"legotrain_JCIaa/mc/MCGen_PbPb_AMPT_5TeV_modPars2_001.root"
+		"legotrain_JCIaa/mc/JCIaa_MCGen_PbPb_AMPT_5TeV_modPars2-all.root"
 	};
 	TString dirAA[NAA] = {
 		"JCIaa_KineOnly"
@@ -268,7 +268,7 @@ void runAMPTOnfly(){
 	};
 
 	TString filePP[NPP] = {
-		"legotrain_JCIaa/mc/MCGen_pp_amptpp_001.root" 
+		"legotrain_JCIaa/mc/JCIaa_MCGen_pp_amptpp-all.root" 
 	};
 	TString commentPP[NPP] = {
 		"MCGen_pp_amptpp"
@@ -322,6 +322,10 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	TVector *CentBinBorders[2];
 	TVector *EtaGapThresholds[2];
 	TVector *zVertBins[2];
+
+    //Float_t zbins[] = {-8, -6, -4, -2, 0, 2, 4, 6, 8, 10};
+    //TVector *newzVertBins = new TVectorT<float>(10,zbins);
+    //newzVertBins->Print();
 
 	for(int idtyp=0; idtyp<2; idtyp++){ 
 		TriggPtBorders[idtyp]              = (TVector*) fin[idtyp]->Get(TopDir[idtyp]+"/JCard/TriggPtBorders");

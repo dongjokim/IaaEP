@@ -20,14 +20,15 @@ fMarton    = ROOT.TFile("results/Final_Marton.root","read");
 
 Modelfiles = {"sysErrors/Signal_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 			  "sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-			  "sysErrors/Signal_AMPT_LHC13f3a_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+			  "sysErrors/Signal_AMPT_LHC13f3a_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+			  "sysErrors/Signal_MCGen_PbPb_AMPT_5TeV_modPars2_JCIaa_KineOnly_MCGen_pp_amptpp_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 			};
-
 
 
 fModel = [ROOT.TFile(elm) for elm in Modelfiles];
 
-ModelLabel = ["~~~JEWEL","~~~AMPT String Melting","~~~AMPT default"];
+ModelLabel = ["~~~JEWEL","~~~AMPT String Melting","~~~AMPT default","AMPT ST Fly"];
+ModelLabel = ["~~~JEWEL","~~~AMPT String Melting","~~~AMPT default","AMPT ST Fly"];
 
 #fJewel   = ROOT.TFile("sysErrors/Signal_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root","read");
 #fAmpt    = ROOT.TFile("sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root","read");
@@ -35,9 +36,10 @@ ModelLabel = ["~~~JEWEL","~~~AMPT String Melting","~~~AMPT default"];
 dataTypePlotParams = [
 	{'plotType':'data','color':'r','fmt':'o','markersize':5.0},
 	{'plotType':'data','color':'k','fmt':'s','markersize':5.0},
-	{'plotType':'theory','facecolor':'C0','edgecolor':'black','alpha':0.5,'linestyle':'-'},
-	{'plotType':'theory','facecolor':'C1','edgecolor':'black','alpha':0.5,'linestyle':'--'},
-	{'plotType':'theory','facecolor':'C2','edgecolor':'black','alpha':0.5,'linestyle':'--'},
+	{'plotType':'theory','facecolor':'C0','edgecolor':'C0','alpha':0.5,'linestyle':'solid','linecolor':'C0'},
+	{'plotType':'theory','facecolor':'C1','edgecolor':'C1','alpha':0.5,'linestyle':'dotted','linecolor':'C0'},
+	{'plotType':'theory','facecolor':'C2','edgecolor':'C2','alpha':0.5,'linestyle':'dashed','linecolor':'C0'},
+	{'plotType':'theory','facecolor':'C3','edgecolor':'C3','alpha':0.5,'linestyle':'dashdot','linecolor':'C0'},
 	{'plotType':'data','color':'k','fmt':'o','fillstyle':'none','markersize':5.0} #PP
 ];
 
@@ -81,13 +83,10 @@ plot = JPyPlotRatio.JPyPlotRatio(panels=(nrow,ncol),
 plot.EnableLatex(True);
 
 plotMatrix = np.empty((pttN,ptaN),dtype=int);
-plotMatrixJEWEL = np.empty((pttN,ptaN),dtype=int);
-plotMatrixAMPT  = np.empty((pttN,ptaN),dtype=int);
 
 for it in range(0,pttN-1):
 	for ia in range(0,ptaN-1):
 		grData = fData.Get("hIAADeltaEtaSigC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,startPtaBin+ia));
-		grData.Print();
 		plotMatrix[it,ia] = plot.AddTH1(ia,grData,**dataTypePlotParams[0],label="ALICE, 0-5\%");
 		grMarton = fMarton.Get("hIAADeltaEtaC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,startPtaBin+ia));
 		plotMatrixMarton = plot.AddTH1(ia,grMarton,**dataTypePlotParams[1],label="2.76TeV");
@@ -95,9 +94,9 @@ for it in range(0,pttN-1):
 		#_,_,_,yerr = JPyPlotRatio.TGraphErrorsToNumpy(gr_sys);
 		#plot.AddSyst(plotMatrixMarton,yerr);
         #grMarton.Print();
-		for im in range(len(Modelfiles)):	
+		for im in range(len(Modelfiles)):
+			fModel[im].Print();	
 			grm = fModel[im].Get("hIAADeltaEtaSigC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,startPtaBin+ia));
-			grm.Print();
 			pm = plot.AddTH1(ia,grm,**dataTypePlotParams[im+2],label=ModelLabel[im]);	
 			plot.Ratio(pm,plotMatrix[it,ia],style="default"); #Calculate and plot ratio between data and theory
 
