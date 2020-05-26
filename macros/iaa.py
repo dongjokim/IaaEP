@@ -18,17 +18,23 @@ import JPyPlotRatio
 fData    = ROOT.TFile("sysErrors/Signal_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root","read");
 fMarton    = ROOT.TFile("results/Final_Marton.root","read");
 
-Modelfiles = ["sysErrors/Signal_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-			  "sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-			  "sysErrors/Signal_AMPT_LHC13f3a_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-			  "sysErrors/Signal_MCGen_PbPb_AMPT_5TeV_modPars2_JCIaa_KineOnly_MCGen_pp_amptpp_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+Modelfiles = [
+			  "sysErrors/Signal_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+#			  "sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+#    		  "sysErrors/Signal_AMPT_LHC13f3a_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+#			  "sysErrors/Signal_MCGen_PbPb_AMPT_5TeV_modPars2_JCIaa_KineOnly_MCGen_pp_amptpp_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 			];
 
 
 fModel = [ROOT.TFile(elm) for elm in Modelfiles];
 
-ModelLabel = ["~~~JEWEL","~~~AMPT String Melting","~~~AMPT default","AMPT ST Fly"];
-ModelLabel = ["~~~JEWEL","~~~AMPT String Melting","~~~AMPT default","AMPT ST Fly"];
+ModelLabel = [
+"~~~JEWEL",
+#"~~~AMPT String Melting",
+#"~~~AMPT default",
+#"AMPT ST Fly"
+];
+
 
 #fJewel   = ROOT.TFile("sysErrors/Signal_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root","read");
 #fAmpt    = ROOT.TFile("sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root","read");
@@ -48,8 +54,8 @@ dataTypePlotParams = [
 nrow = 1;
 ncol = 2;
 xlimits = [(0.005,0.23),(0.01,0.23)];
-ylimits = [(0.4,3.1)];
-rlimits = [(0.1,3.0)];
+ylimits = [(0.4,2.8)];
+rlimits = [(0.0,3.0)];
 
 centrality =["0-5\%","5-10\%"];
 TriggPtBorders = [8,15];
