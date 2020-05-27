@@ -87,16 +87,19 @@ void run1Data(){
 }
 
 void run2Data(){
-		const int NAA = 1;
+		const int NAA = 2;
 	TString fileAA[NAA] = {
-		"legotrain_JCIaa/data/JCIaa_legotrain_GlobalSDD_CF_PbPb-5146_20180411-2232_runlist_3-LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs.root"
+		"legotrain_JCIaa/data/JCIaa_legotrain_GlobalSDD_CF_PbPb-5146_20180411-2232_runlist_3-LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs.root",
+		"legotrain_JCIaa/data/legotrain_CF_PbPb-JCIaa_Hybrid_FILTER_PbPb_194_LHC15o_CentralBarrelTracking_hadronPID_FieldConfigs-8296_20200523-1322_runlist_3.root"
 	};
 	TString dirAA[NAA] = {
-		"JCIAA_GlobalSDD"
+		"JCIAA_GlobalSDD",
+		"JCIAA_TPCOnly" // mistake in legotrain config...
 		
 	};
 	TString commentAA[NAA] = {
-		"LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146"
+		"LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146",
+		"LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_829_Hybrid"
 	};
 
 	const int NPP = 1;
@@ -105,10 +108,12 @@ void run2Data(){
 	};
 
 	TString filePP[NPP] = {
-		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp-1773_20180423-1806-LHC17p_pass1_CENT_woSDD.root"
+		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp-1773_20180423-1806-LHC17p_pass1_CENT_woSDD.root" // old
+		//"legotrain_JCIaa/data/legotrain_CF_pp-JCIaa_GlobalSDD_LHC17p_pass1_FAST_AOD208-4570_20200523-1533.root"
 	};
 	TString commentPP[NPP] = {
 		"LHC17p_pass1_CENT_woSDD"
+		//"LHC17p_pass1_FAST"
 	};
 
 	// Moon
@@ -212,7 +217,8 @@ void runJEWEL(){
 
 	const int NAA = 1;
 	TString fileAA[NAA] = {
-		"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1744_20200519-0937-JEWEL_0_10_PtHard03.root"
+		"legotrain_JCIaa/mc/JCIaa_MCGen_PbPb_JEWL_0_10_PtHard03_Recoil.root"
+	//	"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1744_20200519-0937-JEWEL_0_10_PtHard03.root"
 	};
 	TString dirAA[NAA] = {
 		"JCIaa_KineOnly"
