@@ -1,6 +1,23 @@
 #include "include/Filipad.h"
 #include "include/rootcommon.h"
 
+void Barlow( TH1D* hd, TH1D* hv, TH1D* hbar, int corrtype ){
+ for(int j=0;j<hd->GetNbinsX();j++){
+	hbar->Fill( ( hd->GetBinContent(j+1) - hv->GetBinContent(j+1) ) /
+	sqrt( fabs( pow( hd->GetBinError(j+1),2 ) + corrtype*pow( hv->GetBinError(j+1),2 ) ) ) );
+ }
+}
+
+TH1D* Smooth( TH1D* hT ){
+ TH1D* hSmooth = (TH1D*)hT->Clone(0); hSmooth->Reset();
+ for(int i=1;i<hSmooth->GetNbinsX()-1;i++){
+        hSmooth->SetBinContent( i+1, ( hT->GetBinContent(i) + hT->GetBinContent(i+1) + hT->GetBinContent(i+2) )/3.0 );
+ }
+ hSmooth->SetBinContent( 1, hT->GetBinContent(1) );
+ hSmooth->SetBinContent( hSmooth->GetNbinsX(), hT->GetBinContent(hSmooth->GetNbinsX()) );
+ return hSmooth;
+}
+
 void LoadData();
 void Compare();
 void DrawSignal(int padid, int iPTT, int iPTA);
@@ -57,6 +74,9 @@ int NumCent[2];
 int NPTT;
 int NPTA;
 int iRef=0; // default
+
+
+TH1D* hBarlowDist[Nsets];
 
 //------------------------------------------------------------------------------------------------
 void LoadData() {
@@ -168,3 +188,22 @@ void DrawIAA(int padID, int iPTT, int iPTA) {
 	}
 	//for(int ic=0;ic<NumCent[AA];ic++) delete fpad[ic];
 }
+
+//------------------------------------------------------------------------------------------------
+void BarlowTest(){
+ LoadData();
+ for(int i=0;i<Nsets;i++){
+	hBarlowDist[i] = new TH1D(Form("hBarlowDist_%d",i),Form("hBarlowDist_%d",i),200,-10,10);
+ }
+ for(int ic=0; ic<NumCent[AA]; ic++){
+	for(int iptt=0; iptt<NPTT; iptt++){
+        	for(int ipta=0;ipta<NPTA;ipta++) {
+                	for(int i=0;i<Nsets;i++){
+				Barlow(  hRatio_IAA[iRef][ic][iptt][ipta],  hRatio_IAA[i][ic][iptt][ipta], hBarlowDist[i], 1 ); 			
+			}
+		}
+	}
+ }
+}
+
+
