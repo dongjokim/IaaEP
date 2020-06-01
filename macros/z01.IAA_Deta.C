@@ -87,19 +87,22 @@ void run1Data(){
 }
 
 void run2Data(){
-		const int NAA = 2;
+		const int NAA = 1;
 	TString fileAA[NAA] = {
-		"legotrain_JCIaa/data/JCIaa_legotrain_GlobalSDD_CF_PbPb-5146_20180411-2232_runlist_3-LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs.root",
-		"legotrain_JCIaa/data/legotrain_CF_PbPb-JCIaa_Hybrid_FILTER_PbPb_194_LHC15o_CentralBarrelTracking_hadronPID_FieldConfigs-8296_20200523-1322_runlist_3.root"
+		"legotrain_JCIaa/data/legotrain_CF_PbPb-JCIaa_GlobalSDD_15o_vtx08_FILTER_PbPb_194_LHC15o_CentralBarrelTracking_hadronPID_FieldConfigs-8322_20200530-0314_runlist_3.root"
+		//,"legotrain_JCIaa/data/JCIaa_legotrain_GlobalSDD_CF_PbPb-5146_20180411-2232_runlist_3-LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs.root"
+		//",legotrain_JCIaa/data/legotrain_CF_PbPb-JCIaa_Hybrid_FILTER_PbPb_194_LHC15o_CentralBarrelTracking_hadronPID_FieldConfigs-8296_20200523-1322_runlist_3.root"
 	};
 	TString dirAA[NAA] = {
-		"JCIAA_GlobalSDD",
-		"JCIAA_TPCOnly" // mistake in legotrain config...
+		"JCIAA_GlobalSDD_VTX08"
+		//,"JCIAA_GlobalSDD"
+		//,"JCIAA_TPCOnly" // mistake in legotrain config...
 		
 	};
 	TString commentAA[NAA] = {
-		"LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146",
-		"LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_829_Hybrid"
+		"LHC15o_CentralBarrelTracking_hadronPID_FieldConfigs-8322"
+		//,"LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146",
+		//,"LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_829_Hybrid"
 	};
 
 	const int NPP = 1;
