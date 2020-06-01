@@ -35,16 +35,18 @@ TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV";
 
 // mainly for track cut 
 // vtx change..
-const int Nsets = 2;
+const int Nsets = 3;
 TString infiles[Nsets] = {
 	"sysErrors/Signal_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	"sysErrors/Signal_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_829_Hybrid_JCIAA_TPCOnly_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+	"sysErrors/Signal_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_829_Hybrid_JCIAA_TPCOnly_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_LHC15o_CentralBarrelTracking_hadronPID_FieldConfigs-8322_JCIAA_GlobalSDD_VTX08_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 };
 TFile *fin[Nsets];
 
 TString sLeg[Nsets] = {
 	"GlobalSDD default",
-	"Hybrid"
+	"Hybrid",
+	"zvtx08"
 };
 
 int gMarkers[] = {20,24,21,25,23,27,29,30};
