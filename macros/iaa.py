@@ -16,7 +16,7 @@ import JPyPlotRatio
 
 #fData    = ROOT.TFile("sysErrors/Signal_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root","read");
 fData    = ROOT.TFile("sysErrors/Signal_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root","read");
-fMarton    = ROOT.TFile("results/Final_Marton.root","read");
+fMarton    = ROOT.TFile("results/Fianl_Marton_graphs.root","read");
 
 Modelfiles = [
 			  "sysErrors/Signal_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
@@ -63,7 +63,7 @@ AssocPtBorders = [4,6,8];
 pttN = len(TriggPtBorders);
 ptaN = len(AssocPtBorders);
 startPttBin = 3; #{3,4,6,8,15} 
-startPtaBin = 4; #{0.6,1,2,3,4,6,8,10}
+ptaBins = [4,5];#{0.6,1,2,3,4,6,8,10}
 xtitle = ["$|\\Delta\\eta|$"];
 ytitle = ["$I_{AA}$"];
 plabelptt = {i: "{}$<p_{{Tt}}<$ {} GeV/$c$".format(TriggPtBorders[i],TriggPtBorders[i+1]) for i in range(0,pttN-1)};
@@ -92,19 +92,18 @@ plotMatrix = np.empty((pttN,ptaN),dtype=int);
 
 for it in range(0,pttN-1):
 	for ia in range(0,ptaN-1):
-		grData = fData.Get("hIAADeltaEtaSigC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,startPtaBin+ia));
+		print("{d}",ptaBins[ia]);
+		grData = fData.Get("hIAADeltaEtaSigC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,ptaBins[ia]));
 		plotMatrix[it,ia] = plot.AddTH1(ia,grData,**dataTypePlotParams[0],label="ALICE, 0-5\%");
-		grMarton = fMarton.Get("hIAADeltaEtaC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,startPtaBin+ia));
-		plotMatrixMarton = plot.AddTH1(ia,grMarton,**dataTypePlotParams[1],label="2.76TeV");
-		#grMarton.Print();
-		gr_sys = fMarton.Get("hIAADeltaEtaSystPointByPointC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,startPtaBin+ia));
+		grMarton = fMarton.Get("grIAADeltaEtaC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,ptaBins[ia]));
+		grMarton.Print();
+		plotMatrixMarton = plot.Add(ia,grMarton,**dataTypePlotParams[1],label="2.76TeV");
+		gr_sys = fMarton.Get("grAsymmIAADeltaEtaSystPointByPointC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,ptaBins[ia]));
 		gr_sys.Print();
-		#_,_,_,yerr = JPyPlotRatio.TGraphErrorsToNumpy(gr_sys);
-		#plot.AddSyst(plotMatrixMarton,yerr);
-		plot.AddSyst(plotMatrixMarton,gr_sys);
+		#plot.AddSyst(plotMatrixMarton,gr_sys);
 		for im in range(len(Modelfiles)):
 			fModel[im].Print();	
-			grm = fModel[im].Get("hIAADeltaEtaSigC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,startPtaBin+ia));
+			grm = fModel[im].Get("hIAADeltaEtaSigC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,ptaBins[ia]));
 			pm = plot.AddTH1(ia,grm,**dataTypePlotParams[im+2],label=ModelLabel[im]);	
 			plot.Ratio(pm,plotMatrix[it,ia],style="default"); #Calculate and plot ratio between data and theory
 
