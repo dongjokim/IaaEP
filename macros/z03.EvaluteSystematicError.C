@@ -8,6 +8,7 @@ void Barlow( TH1D* hd, TH1D* hv, TH1D* hbar, int corrtype ){
  }
 }
 
+
 TH1D* Smooth( TH1D* hT ){
  TH1D* hSmooth = (TH1D*)hT->Clone(0); hSmooth->Reset();
  for(int i=1;i<hSmooth->GetNbinsX()-1;i++){
@@ -16,6 +17,14 @@ TH1D* Smooth( TH1D* hT ){
  hSmooth->SetBinContent( 1, hT->GetBinContent(1) );
  hSmooth->SetBinContent( hSmooth->GetNbinsX(), hT->GetBinContent(hSmooth->GetNbinsX()) );
  return hSmooth;
+}
+
+TH1D* GetPlotWithSyst( TH1D* hCntl, TH1D* hFracSyst ){
+ TH1D* hReturn = (TH1D*)hCntl->Clone(0);
+ for(int i=0;i<hReturn->GetNbinsX();i++){
+	hReturn->SetBinError( i+1, hReturn->GetBinContent(i+1)*hFracSyst->GetBinContent(i+1) );
+ }
+ return hReturn;
 }
 
 void LoadData();
@@ -79,6 +88,8 @@ int iRef=0; // default
 
 
 TH1D* hBarlowDist[Nsets];
+TH1D* hSystSmooth[Nsets][kCENT][kMAXD][kMAXD];
+TH1D* hIAADeltaEtaSig_syst[Nsets][kCENT][kMAXD][kMAXD];
 
 //------------------------------------------------------------------------------------------------
 void LoadData() {
@@ -201,11 +212,29 @@ void BarlowTest(){
 	for(int iptt=0; iptt<NPTT; iptt++){
         	for(int ipta=0;ipta<NPTA;ipta++) {
                 	for(int i=0;i<Nsets;i++){
-				Barlow(  hRatio_IAA[iRef][ic][iptt][ipta],  hRatio_IAA[i][ic][iptt][ipta], hBarlowDist[i], 1 ); 			
+				Barlow(  hIAADeltaEtaSig[iRef][ic][iptt][ipta],  hIAADeltaEtaSig[i][ic][iptt][ipta], hBarlowDist[i], 1 ); 			
 			}
 		}
 	}
  }
 }
 
+void ObtainSyst(){
+ LoadData();
+ BarlowTest();
+ for(int ic=0; ic<NumCent[AA]; ic++){
+        for(int iptt=0; iptt<NPTT; iptt++){
+                for(int ipta=0;ipta<NPTA;ipta++) {
+                        for(int i=0;i<Nsets;i++){
+				for(int l=0;l<hRatio_IAA[i][ic][iptt][ipta]->GetNbinsX();l++){
+					hRatio_IAA[i][ic][iptt][ipta]->AddBinContent( l+1, -1.0 );
+					hRatio_IAA[i][ic][iptt][ipta]->SetBinContent( l+1, fabs( hRatio_IAA[i][ic][iptt][ipta]->GetBinContent(l+1) ) );
+				}
+				hSystSmooth[i][ic][iptt][ipta] = (TH1D*)Smooth( hRatio_IAA[i][ic][iptt][ipta] );
+				hIAADeltaEtaSig_syst[i][ic][iptt][ipta] = (TH1D*)GetPlotWithSyst( hIAADeltaEtaSig[iRef][ic][iptt][ipta], hSystSmooth[i][ic][iptt][ipta] );
+			}
+		}
+	}
+ }
+}
 
