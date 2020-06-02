@@ -7,6 +7,7 @@ void compare();
 void DrawSignal(int padid, int iPTT, int iPTA);
 void DrawIAA(int padID, int iPTT, int iPTA);
 void DrawIAAQM(int padID, int iPTT, int iPTA);
+
 double lowx=-0.1;
 double highx=0.3;
 double ly = -0.05;
