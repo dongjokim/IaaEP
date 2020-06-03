@@ -1,6 +1,14 @@
 #include "include/Filipad.h"
 #include "include/rootcommon.h"
 
+int qColors[] = {kAzure, kRed+1, kBlack, kGreen+3};
+int fillStylesTheory[] = {3001,3004,3345,3354,1001,3008}; 
+int fillColors[] = {kAzure-4, kRed-9, 12, kGreen+2};
+int fillsty = 3001;
+double mSize = 1.8;
+double lwidth = 1.5;
+
+
 void Barlow( TH1D* hd, TH1D* hv, TH1D* hbar, int corrtype ){
  for(int j=0;j<hd->GetNbinsX();j++){
 	hbar->Fill( ( hd->GetBinContent(j+1) - hv->GetBinContent(j+1) ) /
@@ -26,11 +34,13 @@ TH1D* GetPlotWithSyst( TH1D* hCntl, TH1D* hFracSyst ){
  }
  return hReturn;
 }
-
+TGraphErrors* h2g(TH1D *hid);
 void LoadData();
 void Compare();
 void DrawSignal(int padid, int iPTT, int iPTA);
 void DrawIAA(int padID, int iPTT, int iPTA);
+void ObtainSyst();
+void BarlowTest();
 
 double lowx=-0.1;
 double highx=0.3;
@@ -71,6 +81,7 @@ TH1D *hIAADeltaEtaSig[Nsets][kCENT][kMAXD][kMAXD]; // background substracted sig
 
 TH1D *hRatio_DeltaEtaSig[Nsets][kCENT][kMAXD][kMAXD]; //Data TPC V0A V0P to AMPT inclusive
 TH1D *hRatio_IAA[Nsets][kCENT][kMAXD][kMAXD];
+TH1D *hRatio_IAA_fordrawing[Nsets][kCENT][kMAXD][kMAXD];
 
 TGraphAsymmErrors *grFinalIAAStat[Nsets][kCENT][kMAXD][kMAXD];      //For Filip's QM, IAA with statstistical 
 TGraphAsymmErrors *grFinalIAASyst[Nsets][kCENT][kMAXD][kMAXD];      //For Filip's QM, IAA with Systematics
@@ -89,7 +100,10 @@ int iRef=0; // default
 
 TH1D* hBarlowDist[Nsets];
 TH1D* hSystSmooth[Nsets][kCENT][kMAXD][kMAXD];
+TGraphErrors* grSystSmooth[Nsets][kCENT][kMAXD][kMAXD];
 TH1D* hIAADeltaEtaSig_syst[Nsets][kCENT][kMAXD][kMAXD];
+TGraphErrors* grIAADeltaEtaSig_syst[Nsets][kCENT][kMAXD][kMAXD];
+void RemovePoints(TGraphErrors *ge, double xmin, double xmax);
 
 //------------------------------------------------------------------------------------------------
 void LoadData() {
@@ -132,8 +146,12 @@ void LoadData() {
 					hRatio_DeltaEtaSig[i][ic][iptt][ipta] = (TH1D*)hDeltaEtaSig[i][AA][ic][iptt][ipta]->Clone();
 					hRatio_DeltaEtaSig[i][ic][iptt][ipta]->Divide(hDeltaEtaSig[iRef][AA][ic][iptt][ipta]);
 
+					// for systematics
 					hRatio_IAA[i][ic][iptt][ipta] = (TH1D*)hIAADeltaEtaSig[i][ic][iptt][ipta]->Clone();
 					hRatio_IAA[i][ic][iptt][ipta]->Divide(hIAADeltaEtaSig[iRef][ic][iptt][ipta]);
+					// for drawing purpose in this macro
+					hRatio_IAA_fordrawing[i][ic][iptt][ipta] = (TH1D*)hIAADeltaEtaSig[i][ic][iptt][ipta]->Clone();
+					hRatio_IAA_fordrawing[i][ic][iptt][ipta]->Divide(hIAADeltaEtaSig[iRef][ic][iptt][ipta]);
 				}
 			} // ipta
 		} // iptt 
@@ -142,7 +160,7 @@ void LoadData() {
 
 //------------------------------------------------------------------------------------------------
 void Compare(){
-    LoadData();
+    ObtainSyst();
 	int ic=0;
 	for(int iptt=3; iptt<NPTT; iptt++){
 		for(int ipta=3;ipta<NPTA-1;ipta++) {
@@ -175,11 +193,17 @@ void DrawIAA(int padID, int iPTT, int iPTA) {
 		leg->AddEntry((TObject*)NULL,hIAADeltaEtaSig[0][ic][iPTT][iPTA]->GetTitle(),"");
 
 		for(int iS=0;iS<Nsets;iS++) {
+			// add systematics
+			grIAADeltaEtaSig_syst[iS][ic][iPTT][iPTA]->SetFillStyle(fillStylesTheory[0]);
+			grIAADeltaEtaSig_syst[iS][ic][iPTT][iPTA]->SetFillColor(fillColors[0]);
+			grIAADeltaEtaSig_syst[iS][ic][iPTT][iPTA]->Draw("same3");
+
 			hIAADeltaEtaSig[iS][ic][iPTT][iPTA]->SetMarkerStyle(gMarkers[iS]);
 			hIAADeltaEtaSig[iS][ic][iPTT][iPTA]->SetMarkerColor(gColors[iS]);
 			hIAADeltaEtaSig[iS][ic][iPTT][iPTA]->SetLineColor(gColors[iS]);
 			hIAADeltaEtaSig[iS][ic][iPTT][iPTA]->Draw("p,same");
 			leg->AddEntry(hIAADeltaEtaSig[iS][ic][iPTT][iPTA],sLeg[iS],"pl");
+
 		}
 
 		
@@ -189,13 +213,16 @@ void DrawIAA(int padID, int iPTT, int iPTA) {
 		p = fpad[ic]->GetPad(2);
 		p->SetTickx(); p->SetGridy(1); p->SetLogx(0), p->SetLogy(0); p->cd();
 		TH2F *hfr1 = new TH2F("hfr1"," ", 100, lowx, highx, 10, rlow, rhigh);
-		hset( *hfr1, "|#Delta#eta|", Form("Ratio to %s",sLeg[iRef].Data()),1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);
+		hset( *hfr1, "|#Delta#eta|", "Ratio to Default",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);
 		hfr1->Draw();
 		for(int i=0;i<Nsets;i++) {
-			hRatio_IAA[i][ic][iPTT][iPTA]->SetMarkerStyle(gMarkers[i]);
-			hRatio_IAA[i][ic][iPTT][iPTA]->SetMarkerColor(gColors[i]);
-			hRatio_IAA[i][ic][iPTT][iPTA]->SetLineColor(gColors[i]);
-			hRatio_IAA[i][ic][iPTT][iPTA]->Draw("p,same");
+			grSystSmooth[i][ic][iPTT][iPTA]->SetFillStyle(fillsty);
+			grSystSmooth[i][ic][iPTT][iPTA]->SetFillColor(fillColors[0]);
+			grSystSmooth[i][ic][iPTT][iPTA]->Draw("same2");
+			hRatio_IAA_fordrawing[i][ic][iPTT][iPTA]->SetMarkerStyle(gMarkers[i]);
+			hRatio_IAA_fordrawing[i][ic][iPTT][iPTA]->SetMarkerColor(gColors[i]);
+			hRatio_IAA_fordrawing[i][ic][iPTT][iPTA]->SetLineColor(gColors[i]);
+			hRatio_IAA_fordrawing[i][ic][iPTT][iPTA]->Draw("p,same");		
 		}
 		//gPad->GetCanvas()->SaveAs(Form("figs_syst/IAA_C%02dT%02dA%02d.pdf",ic,iPTT,iPTA));
 	}
@@ -232,9 +259,61 @@ void ObtainSyst(){
 				}
 				hSystSmooth[i][ic][iptt][ipta] = (TH1D*)Smooth( hRatio_IAA[i][ic][iptt][ipta] );
 				hIAADeltaEtaSig_syst[i][ic][iptt][ipta] = (TH1D*)GetPlotWithSyst( hIAADeltaEtaSig[iRef][ic][iptt][ipta], hSystSmooth[i][ic][iptt][ipta] );
+				grIAADeltaEtaSig_syst[i][ic][iptt][ipta] = (TGraphErrors*)h2g(hIAADeltaEtaSig_syst[i][ic][iptt][ipta]);
+				RemovePoints(grIAADeltaEtaSig_syst[i][ic][iptt][ipta],0.01,0.27);
+				grSystSmooth[i][ic][iptt][ipta] = (TGraphErrors*)h2g(hSystSmooth[i][ic][iptt][ipta]);
+				RemovePoints(grSystSmooth[i][ic][iptt][ipta],0.01,0.27);
 			}
 		}
 	}
  }
 }
+
+TGraphErrors* h2g(TH1D *hid){
+	int offstart=1;
+    int    NC =  hid->GetNbinsX()+offstart;
+    double binx[NC];
+    double ebinx[NC];
+    double co[NC];
+    double eco[NC];
+
+    for(int i=offstart; i<NC; i++) {
+    	binx[i] = hid->GetBinCenter(i);
+    	ebinx[i] = 0.50;
+    	co[i] = hid->GetBinContent(i);
+    	//cout << i<<"\t"<< hid->GetXaxis()->GetBinLabel(i) <<endl;
+    	eco[i]=hid->GetBinError(i);
+    }
+    TGraphErrors *grr = new TGraphErrors(NC,binx,co,ebinx,eco);
+    grr->SetTitle(hid->GetTitle());
+
+return grr;
+}
+
+void RemovePoints(TGraphErrors *ge, double xmin, double xmax)
+{
+  // Remove zero points from TGraphErrors.
+
+  if(!ge){return;}
+
+  Int_t nPoints = ge->GetN();
+  Double_t x = 0.;
+  Double_t y = 0.;
+  int p =0;
+  while(p<nPoints) {
+    ge->GetPoint(p,x,y);
+    if( x < xmin || x > xmax ) // Npart cent < 60%
+    {
+      ge->RemovePoint(p);
+      //            cout<<Form(" WARNING (%s): point %d is < 1.e-10 and it was removed from the plot !!!!",ge->GetName(),p+1)<<endl;
+      nPoints = ge->GetN();
+    } else {
+      p++;
+    }
+  } // end of for(Int_t p=0;p<nPoints;p++)
+
+  //    cout<<endl;
+  return;
+
+} // end of void RemoveZeroPoints(TGraphErrors *ge)
 
