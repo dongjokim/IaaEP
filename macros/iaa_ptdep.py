@@ -51,26 +51,33 @@ dataTypePlotParams = [
 
 
 # define panel/xaxis limits/titles
-nrow = 1;
+nrow = 2;
 ncol = 2;
 xlimits = [(0.005,0.23),(0.01,0.23)];
-ylimits = [(0.4,2.8)];
+ylimits = [(0.4,2.8),(0.4,2.8)];
 rlimits = [(0.0,3.0)];
 
-centrality =["0-5\%","5-10\%"];
-TriggPtBorders = [8,15];
-AssocPtBorders = [4,6,8];
-pttN = len(TriggPtBorders);
-ptaN = len(AssocPtBorders);
-startPttBin = 3; #{3,4,6,8,15} 
-ptaBins = [4,5];#{0.6,1,2,3,4,6,8,10}
+histnames = [
+			 ["C00T02","C01T02"],  # check it with ROOT file Title
+			 ["C00T03","C01T03"]#,"0_6_11"]
+		    ];
+
+iaStart = [3,4];
+ptaLabel = [
+			["$3.0 <p_{{Ta}}< 4.0$","$4.0 <p_{{Ta}}< 6.0$"],
+			["$4.0 <p_{{Ta}}< 6.0$","$6.0 <p_{{Ta}}< 8.0$"]
+			];
+plables = [
+			"$6.0 <p_{{Tt}}< 8.0$ 0-5\%","$6.0 <p_{{Tt}}< 8.0$ 5-10\%",
+			"$8.0 <p_{{Tt}}< 15.0$ 0-5\%","$8.0 <p_{{Tt}}< 15.0$ 5-10\%",
+		 ];
+
+centrality =["0-5\%","5-10\%","10-20\%","20-40\%","40-60\%"];
+
 xtitle = ["$|\\Delta\\eta|$"];
 ytitle = ["$I_{AA}$"];
-plabelptt = {i: "{}$<p_{{Tt}}<$ {} GeV/$c$".format(TriggPtBorders[i],TriggPtBorders[i+1]) for i in range(0,pttN-1)};
-plabelpta = {i: "{}$<p_{{Tt}}<$ {} $\\otimes$ {}$<p_{{Ta}}<$ {}".format(TriggPtBorders[0],TriggPtBorders[1],AssocPtBorders[i],AssocPtBorders[i+1]) for i in range(0,ptaN-1)};
 # Following two must be added
 toptitle = "PbPb $\\sqrt{s_{NN}}$ = 5.02 TeV"; # need to add on the top
-xlong = 0;
 
 dataDetail = "$|\\eta| < 0.8$";
 
@@ -78,8 +85,9 @@ dataDetail = "$|\\eta| < 0.8$";
 plot = JPyPlotRatio.JPyPlotRatio(panels=(nrow,ncol),
 	rowBounds=ylimits,  # for nrow
 	colBounds=xlimits,  # for ncol
-	panelLabel=plabelpta,  # nrowxncol
+	panelLabel=plables,  # nrowxncol
 	ratioBounds=rlimits,# for nrow
+	disableRatio=[0,1], # disable ratio..
 	panelLabelLoc=(0.12,0.92),panelLabelSize=10,panelLabelAlign="left",
 	legendPanel=1,
 	legendLoc=(0.40,0.65),legendSize=9,xlabel=xtitle[0],ylabel=ytitle[0]);
@@ -88,29 +96,18 @@ plot = JPyPlotRatio.JPyPlotRatio(panels=(nrow,ncol),
 
 plot.EnableLatex(True);
 
-plotMatrix = np.empty((pttN,ptaN),dtype=int);
+plotMatrix = np.empty((nrow,ncol),dtype=int);
 
-for it in range(0,pttN-1):
-	for ia in range(0,ptaN-1):
-		print("{d}",ptaBins[ia]);
-		grData = fData.Get("grIAADeltaEtaSigC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,ptaBins[ia]));
-		plotMatrix[it,ia] = plot.Add(ia,grData,**dataTypePlotParams[0],label="ALICE, 0-5\%");
-		grData_sys = fData.Get("grIAADeltaEtaSigC{:02d}T{:02d}A{:02d}_syst".format(0,startPttBin+it,ptaBins[ia]));
-		_,_,_,syst = JPyPlotRatio.TGraphErrorsToNumpy(ROOT.TGraphErrors(grData_sys));
-		plot.AddSyst(plotMatrix[it,ia],syst);
-
-		grMarton = fMarton.Get("grIAADeltaEtaC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,ptaBins[ia]));
-		grMarton.Print();
-		plotMatrixMarton = plot.Add(ia,grMarton,**dataTypePlotParams[1],label="2.76TeV");
-		gr_sys = fMarton.Get("grAsymmIAADeltaEtaSystPointByPointC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,ptaBins[ia]));
-		gr_sys.Print();
-		plot.AddSyst(plotMatrixMarton,gr_sys);
-
-		for im in range(len(Modelfiles)):
-			fModel[im].Print();	
-			grm = fModel[im].Get("hIAADeltaEtaSigC{:02d}T{:02d}A{:02d}".format(0,startPttBin+it,ptaBins[ia]));
-			pm = plot.AddTH1(ia,grm,**dataTypePlotParams[im+2],label=ModelLabel[im]);	
-			plot.Ratio(pm,plotMatrix[it,ia],style="default"); #Calculate and plot ratio between data and theory
+for i in range(0,nrow):
+	for j in range(0,ncol):
+		index = i*ncol+j; # for each panel 
+		for ia in range(2):
+			grData = fData.Get("grIAADeltaEtaSig{}A{:02d}".format(histnames[i][j],iaStart[i]+ia));
+			plotMatrix[i,j] = plot.Add(index,grData,**dataTypePlotParams[ia],label=ptaLabel[i][ia]);
+			grData_sys = fData.Get("grIAADeltaEtaSig{}A{:02d}_syst".format(histnames[i][j],iaStart[i]+ia));
+			_,_,_,syst = JPyPlotRatio.TGraphErrorsToNumpy(ROOT.TGraphErrors(grData_sys));
+			plot.AddSyst(plotMatrix[i,j],syst);
+		
 
 fData.Close();
 

@@ -34,6 +34,15 @@ TH1D* GetPlotWithSyst( TH1D* hCntl, TH1D* hFracSyst ){
  }
  return hReturn;
 }
+
+TH1D* GetRelativeSyst(TH1D* hFracSyst ){
+ TH1D* hReturn = (TH1D*)hFracSyst->Clone(0);
+ for(int i=0;i<hReturn->GetNbinsX();i++){
+	hReturn->SetBinContent( i+1, 1.+ hFracSyst->GetBinContent(i+1) );
+ }
+ return hReturn;
+}
+
 TGraphErrors* h2g(TH1D *hid);
 void LoadData();
 void Compare();
@@ -41,6 +50,8 @@ void DrawSignal(int padid, int iPTT, int iPTA);
 void DrawIAA(int padID, int iPTT, int iPTA);
 void ObtainSyst();
 void BarlowTest();
+void ObtainTotalSyst();
+void SaveFinalResults();
 
 double lowx=-0.1;
 double highx=0.3;
@@ -78,6 +89,7 @@ enum dataType { AA, pp };
 
 TH1D *hDeltaEtaSig[Nsets][2][kCENT][kMAXD][kMAXD]; // background substracted signal based on fit
 TH1D *hIAADeltaEtaSig[Nsets][kCENT][kMAXD][kMAXD]; // background substracted signal IAA
+TGraphErrors* grIAADeltaEtaSig[kCENT][kMAXD][kMAXD]; // final result to graph (default)
 
 TH1D *hRatio_DeltaEtaSig[Nsets][kCENT][kMAXD][kMAXD]; //Data TPC V0A V0P to AMPT inclusive
 TH1D *hRatio_IAA[Nsets][kCENT][kMAXD][kMAXD];
@@ -99,10 +111,14 @@ int iRef=0; // default
 
 
 TH1D* hBarlowDist[Nsets];
-TH1D* hSystSmooth[Nsets][kCENT][kMAXD][kMAXD];
-TH1D* hSystSmoothTotal[kCENT][kMAXD][kMAXD];
-TGraphErrors* grSystSmooth[Nsets][kCENT][kMAXD][kMAXD];
-TH1D* hIAADeltaEtaSig_syst[Nsets][kCENT][kMAXD][kMAXD]; // individual systematics
+// individual 0-1 relative 
+TH1D* hSystSmooth[Nsets][kCENT][kMAXD][kMAXD]; 
+TH1D* hSystSmoothTotal[kCENT][kMAXD][kMAXD];  // total
+
+TH1D* hSystSmoothRelativeSyst[Nsets][kCENT][kMAXD][kMAXD];
+
+// individual systematics mean is taken from the defaults
+TH1D* hIAADeltaEtaSig_syst[Nsets][kCENT][kMAXD][kMAXD]; 
 TH1D* hIAADeltaEtaSig_Totsyst[kCENT][kMAXD][kMAXD]; // total systenatics
 TGraphErrors* grIAADeltaEtaSig_syst[Nsets][kCENT][kMAXD][kMAXD];
 TGraphErrors* grIAADeltaEtaSig_Totsyst[kCENT][kMAXD][kMAXD];
@@ -170,7 +186,7 @@ void Compare(){
 				DrawIAA(ic++,iptt, ipta);
 	 	}
 	}
-
+	SaveFinalResults();
 }
 
 
@@ -195,11 +211,13 @@ void DrawIAA(int padID, int iPTT, int iPTA) {
 
 		leg->AddEntry((TObject*)NULL,hIAADeltaEtaSig[0][ic][iPTT][iPTA]->GetTitle(),"");
 
+		// add systematics
+		grIAADeltaEtaSig_Totsyst[ic][iPTT][iPTA]->SetFillStyle(fillStylesTheory[0]);
+		grIAADeltaEtaSig_Totsyst[ic][iPTT][iPTA]->SetFillColor(fillColors[0]);
+		grIAADeltaEtaSig_Totsyst[ic][iPTT][iPTA]->Draw("same2");
+		
 		for(int iS=0;iS<Nsets;iS++) {
-			// add systematics
-			grIAADeltaEtaSig_syst[iS][ic][iPTT][iPTA]->SetFillStyle(fillStylesTheory[0]);
-			grIAADeltaEtaSig_syst[iS][ic][iPTT][iPTA]->SetFillColor(fillColors[0]);
-			grIAADeltaEtaSig_syst[iS][ic][iPTT][iPTA]->Draw("same2");
+	
 
 			hIAADeltaEtaSig[iS][ic][iPTT][iPTA]->SetMarkerStyle(gMarkers[iS]);
 			hIAADeltaEtaSig[iS][ic][iPTT][iPTA]->SetMarkerColor(gColors[iS]);
@@ -218,8 +236,8 @@ void DrawIAA(int padID, int iPTT, int iPTA) {
 		hset( *hfr1, "|#Delta#eta|", "Ratio to Default",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);
 		hfr1->Draw();
 		for(int i=0;i<Nsets;i++) {
-			hSystSmooth[i][ic][iPTT][iPTA]->SetLineColor(kBlack);
-			hSystSmooth[i][ic][iPTT][iPTA]->Draw("histosame");
+			hSystSmoothRelativeSyst[i][ic][iPTT][iPTA]->SetLineColor(gColors[i]);
+			hSystSmoothRelativeSyst[i][ic][iPTT][iPTA]->Draw("histosame");
 			hRatio_IAA_fordrawing[i][ic][iPTT][iPTA]->SetMarkerStyle(gMarkers[i]);
 			hRatio_IAA_fordrawing[i][ic][iPTT][iPTA]->SetMarkerColor(gColors[i]);
 			hRatio_IAA_fordrawing[i][ic][iPTT][iPTA]->SetLineColor(gColors[i]);
@@ -262,17 +280,15 @@ void ObtainSyst(){
 				hIAADeltaEtaSig_syst[i][ic][iptt][ipta] = (TH1D*)GetPlotWithSyst( hIAADeltaEtaSig[iRef][ic][iptt][ipta], hSystSmooth[i][ic][iptt][ipta] );
 				grIAADeltaEtaSig_syst[i][ic][iptt][ipta] = (TGraphErrors*)h2g(hIAADeltaEtaSig_syst[i][ic][iptt][ipta]);
 				RemovePoints(grIAADeltaEtaSig_syst[i][ic][iptt][ipta],0.01,0.27);
-				grSystSmooth[i][ic][iptt][ipta] = (TGraphErrors*)h2g(hSystSmooth[i][ic][iptt][ipta]);
-				RemovePoints(grSystSmooth[i][ic][iptt][ipta],0.01,0.27);
+				hSystSmoothRelativeSyst[i][ic][iptt][ipta]= (TH1D*)GetRelativeSyst(hSystSmooth[i][ic][iptt][ipta]);
 			}
 		}
 	}
  }
+ ObtainTotalSyst(); // calculate total systematics
 }
+// calculate total systematics
 void ObtainTotalSyst(){
- LoadData();
- BarlowTest();
- ObtainSyst();
 	for(int ic=0; ic<NumCent[AA]; ic++){
     	for(int iptt=0; iptt<NPTT; iptt++){
         	for(int ipta=0;ipta<NPTA;ipta++) {
@@ -286,11 +302,28 @@ void ObtainTotalSyst(){
  					}
         			hSystSmoothTotal[ic][iptt][ipta]->SetBinContent(i,TMath::Sqrt(totsys));
         		} // end of histo binx
+        		hIAADeltaEtaSig_Totsyst[ic][iptt][ipta] = (TH1D*)GetPlotWithSyst( hIAADeltaEtaSig[iRef][ic][iptt][ipta], hSystSmoothTotal[ic][iptt][ipta] );
+        		grIAADeltaEtaSig_Totsyst[ic][iptt][ipta] = (TGraphErrors*)h2g(hIAADeltaEtaSig_Totsyst[ic][iptt][ipta]);
+        		RemovePoints(grIAADeltaEtaSig_Totsyst[ic][iptt][ipta],0.01,0.27);
+        		grIAADeltaEtaSig[ic][iptt][ipta] = (TGraphErrors*)h2g( hIAADeltaEtaSig[iRef][ic][iptt][ipta]);
+        		RemovePoints(grIAADeltaEtaSig[ic][iptt][ipta],0.01,0.27);
 			}
 		}
  	}
 }
 
+void SaveFinalResults(){
+
+	TFile *fout = new TFile("results/Iaa_PbPb5.02TeV_results.root","recreate");
+	for(int ic=0; ic<NumCent[AA]; ic++){
+    	for(int iptt=0; iptt<NPTT; iptt++){
+        	for(int ipta=0;ipta<NPTA;ipta++) {
+        		grIAADeltaEtaSig[ic][iptt][ipta]->Write(Form("grIAADeltaEtaSigC%02dT%02dA%02d",ic,iptt,ipta));
+        		grIAADeltaEtaSig_Totsyst[ic][iptt][ipta]->Write(Form("grIAADeltaEtaSigC%02dT%02dA%02d_syst",ic,iptt,ipta));
+			}
+		}
+ 	}
+}
 
 TGraphErrors* h2g(TH1D *hid){
 	int offstart=1;
