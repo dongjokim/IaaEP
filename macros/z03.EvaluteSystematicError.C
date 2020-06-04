@@ -270,6 +270,9 @@ void ObtainSyst(){
  }
 }
 void ObtainTotalSyst(){
+ LoadData();
+ BarlowTest();
+ ObtainSyst();
 	for(int ic=0; ic<NumCent[AA]; ic++){
     	for(int iptt=0; iptt<NPTT; iptt++){
         	for(int ipta=0;ipta<NPTA;ipta++) {
@@ -278,6 +281,7 @@ void ObtainTotalSyst(){
  				for(int i=1;i<=hSystSmoothTotal[ic][iptt][ipta]->GetNbinsX();i++){
  					double totsys = 0.;
  					for(int j=1;j<Nsets;j++){
+						if( hBarlowDist[j]->GetRMS() > 1.0 ) continue;
  						totsys =+ hSystSmooth[j][ic][iptt][ipta]->GetBinContent(i)*hSystSmooth[j][ic][iptt][ipta]->GetBinContent(i);
  					}
         			hSystSmoothTotal[ic][iptt][ipta]->SetBinContent(i,TMath::Sqrt(totsys));
