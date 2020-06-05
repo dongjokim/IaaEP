@@ -20,7 +20,7 @@ fMarton    = ROOT.TFile("results/Fianl_Marton_graphs.root","read");
 
 Modelfiles = [
 			  "sysErrors/Signal_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-			  "sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+			  "sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 #    		  "sysErrors/Signal_AMPT_LHC13f3a_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 #			  "sysErrors/Signal_MCGen_PbPb_AMPT_5TeV_modPars2_JCIaa_KineOnly_MCGen_pp_amptpp_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 			];
@@ -44,7 +44,12 @@ dataTypePlotParams = [
 	{'plotType':'data','color':'r','fmt':'o','markersize':5.0},
 	{'plotType':'data','color':'b','fmt':'P','markersize':5.0},
 	{'plotType':'data','color':'m','fmt':'X','markersize':5.0},
-	{'plotType':'data','color':'k','fmt':'o','fillstyle':'none','markersize':5.0} #PP
+	{'plotType':'data','color':'k','fmt':'*','markersize':5.0},
+	{'plotType':'data','color':'k','fmt':'s','fillstyle':'none','markersize':5.0},
+	{'plotType':'data','color':'r','fmt':'o','fillstyle':'none','markersize':5.0},
+	{'plotType':'data','color':'b','fmt':'P','fillstyle':'none','markersize':5.0},
+	{'plotType':'data','color':'m','fmt':'X','fillstyle':'none','markersize':5.0},
+	{'plotType':'data','color':'k','fmt':'o','fillstyle':'none','markersize':5.0} 
 ];
 
 
@@ -97,6 +102,13 @@ for i in range(0,nrow):
 			grData_sys = fData.Get("grIAADeltaEtaSigC{:02d}{}_syst".format(ic,histnames[i][j]));
 			_,_,_,syst = JPyPlotRatio.TGraphErrorsToNumpy(ROOT.TGraphErrors(grData_sys));
 			plot.AddSyst(plotMatrix,syst);
+			grMarton = fMarton.Get("grIAADeltaEtaC{:02d}{}".format(ic,histnames[i][j]));
+			grMarton.Print();
+			plotMatrixMarton = plot.Add(index,grMarton,**dataTypePlotParams[ic+5],label="2.76TeV");
+			gr_sys = fMarton.Get("grAsymmIAADeltaEtaSystPointByPointC{:02d}{}".format(ic,histnames[i][j]));
+			gr_sys.Print();
+			plot.AddSyst(plotMatrixMarton,gr_sys);
+			#plot.Ratio(plotMatrixMarton,plotMatrix,style="default"); #Calculate and plot ratio between data and theory
 		
 fData.Close();
 
