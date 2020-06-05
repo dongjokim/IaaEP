@@ -52,7 +52,7 @@ dataTypePlotParams = [
 nrow = 2;
 ncol = 2;
 xlimits = [(0.005,0.6),(0.005,0.6)];
-ylimits = [(-0.1,0.8),(-0.1,0.8)];
+ylimits = [(-0.1,0.85),(-0.1,0.85)];
 rlimits = [(0.0,2.0),(0.0,2.0)];
 
 histnames = [
@@ -99,18 +99,6 @@ for i in range(0,nrow):
 	for j in range(0,ncol):
 		index = i*ncol+j; # for each panel 
 		plot.GetAxes(index).set_xticks([0,0.1,0.2,0.3,0.4,0.5]);
-		#plot.GetAxes(index).set_yticks([0,0.2,0.4]);
-		# grData = fData.Get("grIAADeltaEtaSig{}".format(histnames[i][j]));
-		# plotMatrix[i,j] = plot.Add(index,grData,**dataTypePlotParams[0],label="5.02 TeV");
-		# grData_sys = fData.Get("grIAADeltaEtaSig{}_syst".format(histnames[i][j]));
-		# _,_,_,syst = JPyPlotRatio.TGraphErrorsToNumpy(ROOT.TGraphErrors(grData_sys));
-		# plot.AddSyst(plotMatrix[i,j],syst);		
-		# grMarton = fMarton.Get("grIAADeltaEta{}".format(histnames[i][j]));
-		# plotMatrixMarton = plot.Add(index,grMarton,**dataTypePlotParams[1],label="2.76 TeV");
-		# gr_sys = fMarton.Get("grAsymmIAADeltaEtaSystPointByPoint{}".format(histnames[i][j]));
-		# #gr_sys.Print();
-		# plot.AddSyst(plotMatrixMarton,gr_sys);
-
 		for im in range(len(Modelfiles)):
 			grm = fModel[im].Get("hDeltaEtaSig01{}".format(histnames[i][j]));
 			plotMatrixModel[im] = plot.AddTH1(index,grm,**dataTypePlotParams[im+2],label=ModelLabel[im]);
@@ -131,5 +119,6 @@ plot.Plot();
 #plot.GetRatioAxes(3).remove();
 
 plot.Save("figs/Fig3_gluonfilter.pdf");
+plot.Save("figs/Fig3_gluonfilter.png");
 plot.Show();
 
