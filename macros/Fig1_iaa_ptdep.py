@@ -16,7 +16,7 @@ import JPyPlotRatio
 
 #fData    = ROOT.TFile("sysErrors/Signal_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root","read");
 fData    = ROOT.TFile("results/Iaa_PbPb5.02TeV_results.root","read");
-fMarton    = ROOT.TFile("results/Fianl_Marton_graphs.root","read");
+fMarton    = ROOT.TFile("results/Final_Marton_graphs.root","read");
 
 Modelfiles = [
 			  "sysErrors/Signal_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
@@ -41,7 +41,8 @@ ModelLabel = [
 #fAmpt    = ROOT.TFile("sysErrors/sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root","read");
 dataTypePlotParams = [
 	{'plotType':'data','color':'r','fmt':'o','markersize':5.0},
-	{'plotType':'data','color':'k','fmt':'s','fillstyle':'none','markersize':5.0}
+	{'plotType':'data','color':'k','fmt':'s','fillstyle':'none','markersize':5.0},
+	{'plotType':'theory','facecolor':'C0','edgecolor':'C0','alpha':0.5,'linestyle':'solid','linecolor':'C0'},
 ];
 
 
@@ -105,8 +106,11 @@ for i in range(0,nrow):
 		grMarton = fMarton.Get("grIAADeltaEta{}".format(histnames[i][j]));
 		plotMatrixMarton = plot.Add(index,grMarton,**dataTypePlotParams[1],label="$\\sqrt{s_{NN}}$ = 2.76 TeV");
 		gr_sys = fMarton.Get("grAsymmIAADeltaEtaSystPointByPoint{}".format(histnames[i][j]));
-		#gr_sys.Print();
 		plot.AddSyst(plotMatrixMarton,gr_sys);
+		
+		gr_sysSC = fMarton.Get("grIAADeltaEtaSystScaling{}".format(histnames[i][j]));
+		plotMatrixMartonSCsys = plot.Add(index,gr_sysSC,**dataTypePlotParams[2],label="Scale error");
+		
 		#if(ia==1):
 		#	plot.Ratio(plotMatrix[i,j,0],plotMatrix[i,j,ia],style="errorbar");
 

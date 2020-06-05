@@ -7,11 +7,12 @@ TH1D *hIAADeltaEta[NC][NPTT][NPTA];
 TGraphErrors *grIAADeltaEta[NC][NPTT][NPTA];
 
 TGraphAsymmErrors *grAsymmIAADeltaEtaSystPointByPoint[NC][NPTT][NPTA];
-TGraphAsymmErrors *grAsymmIAADeltaEtaSystScaling[NC][NPTT][NPTA];
+TGraphErrors *grIAADeltaEtaSystScaling[NC][NPTT][NPTA];
 TBox *boxIAADeltaEtaSystScaling[NC][NPTT][NPTA];
 void LoadData();
 
 TGraphErrors* h2g(TH1D *hid);
+TGraphErrors* GetSCsyst(TH1D *hid,TBox *tbox);
 void RemovePoints(TGraphErrors *ge, double xmin, double xmax);
 
 void LoadData(){
@@ -26,6 +27,8 @@ void LoadData(){
         hIAADeltaEta[ic][it][ia] = (TH1D*)fin->Get(Form("hIAADeltaEtaC%02dT%02dA%02d",ic,it+ptStart,ptaBins[it][ia]));
         grAsymmIAADeltaEtaSystPointByPoint[ic][it][ia] = (TGraphAsymmErrors*)fin->Get(Form("hIAADeltaEtaSystPointByPointC%02dT%02dA%02d",ic,it+ptStart,ptaBins[it][ia]));
         boxIAADeltaEtaSystScaling[ic][it][ia] = (TBox*)fin->Get(Form("hIAADeltaEtaSystScalingC%02dT%02dA%02d",ic,it+ptStart,ptaBins[it][ia]));
+        boxIAADeltaEtaSystScaling[ic][it][ia]->Print();
+        grIAADeltaEtaSystScaling[ic][it][ia] =(TGraphErrors*)GetSCsyst(hIAADeltaEta[ic][it][ia],boxIAADeltaEtaSystScaling[ic][it][ia]);
       }
     }
   }
@@ -35,7 +38,7 @@ void LoadData(){
 void WriteData(){
 
 	cout <<"+++++++++++++++++++++++++++++++++++++++++++++++"<<endl;
-	TFile *fout = new TFile("Fianl_Marton_graphs.root","recreate");
+	TFile *fout = new TFile("Final_Marton_graphs.root","recreate");
 	//------------ R e a d    D a t a ------------    
 	cout <<"Writing data...."<<endl;
 	fout->cd();
@@ -46,9 +49,11 @@ void WriteData(){
         cout << Form("C%02dT%02dA%02d",ic,it+ptStart,ptaBins[it][ia]) << endl;
         grIAADeltaEta[ic][it][ia] = (TGraphErrors*)h2g(hIAADeltaEta[ic][it][ia]);
         RemovePoints(grIAADeltaEta[ic][it][ia],0.01,0.27);
+        RemovePoints(grIAADeltaEtaSystScaling[ic][it][ia],0.01,0.27); // remove points for drawing
         //grIAADeltaEta[ic][it][ia]->Print();
         grIAADeltaEta[ic][it][ia]->Write(Form("grIAADeltaEtaC%02dT%02dA%02d",ic,it+ptStart,ptaBins[it][ia]));
         grAsymmIAADeltaEtaSystPointByPoint[ic][it][ia]->Write(Form("grAsymmIAADeltaEtaSystPointByPointC%02dT%02dA%02d",ic,it+ptStart,ptaBins[it][ia]));
+        grIAADeltaEtaSystScaling[ic][it][ia]->Write(Form("grIAADeltaEtaSystScalingC%02dT%02dA%02d",ic,it+ptStart,ptaBins[it][ia]));
       }
     }
   }
@@ -76,6 +81,33 @@ TGraphErrors* h2g(TH1D *hid){
 return grr;
 }
 
+TGraphErrors* GetSCsyst(TH1D *hid,TBox *tbox){
+  int offstart=1;
+  int    NC =  hid->GetNbinsX()+offstart;
+  double binx[NC];
+  double ebinx[NC];
+  double co[NC];
+  double eco[NC];
+  double x1 = tbox->GetX1();
+  double x2 = tbox->GetX2();
+  double y1 = tbox->GetY1();
+  double y2 = tbox->GetY2();
+  double scmean = (y1+y2)/2.;
+  double scmeanerr = TMath::Abs(y1-y2)/2.0;
+  cout << Form("(%.3f,%.3f),(%.3f,%.3f) : %.3f %.3f",x1,y1,x2,y2,scmean,scmeanerr) << endl;
+
+  for(int i=offstart; i<NC; i++) {
+      binx[i] = hid->GetBinCenter(i);
+      ebinx[i] = 0.02;
+      co[i] = scmean;
+      //cout << i<<"\t"<< hid->GetXaxis()->GetBinLabel(i) <<endl;
+      eco[i]=scmeanerr;
+  }
+  TGraphErrors *grr = new TGraphErrors(NC,binx,co,ebinx,eco);
+  grr->SetTitle(hid->GetTitle());
+
+return grr; 
+}
 
 void RemovePoints(TGraphErrors *ge, double xmin, double xmax)
 {

@@ -16,7 +16,7 @@ import JPyPlotRatio
 
 #fData    = ROOT.TFile("sysErrors/Signal_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root","read");
 fData    = ROOT.TFile("results/Iaa_PbPb5.02TeV_results.root","read");
-fMarton    = ROOT.TFile("results/Fianl_Marton_graphs.root","read");
+fMarton    = ROOT.TFile("results/Final_Marton_graphs.root","read");
 
 Modelfiles = [
 			  "sysErrors/Signal_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
@@ -44,9 +44,11 @@ dataTypePlotParams = [
 	{'plotType':'data','color':'r','fmt':'o','markersize':5.0},
 	{'plotType':'data','color':'k','fmt':'s','markersize':5.0},
 	{'plotType':'theory','facecolor':'C0','edgecolor':'C0','alpha':0.5,'linestyle':'solid','linecolor':'C0'},
-	{'plotType':'theory','facecolor':'C1','edgecolor':'C1','alpha':0.5,'linestyle':'dotted','linecolor':'C0'},
-	{'plotType':'theory','facecolor':'C2','edgecolor':'C2','alpha':0.5,'linestyle':'dashed','linecolor':'C0'},
-	{'plotType':'theory','facecolor':'C3','edgecolor':'C3','alpha':0.5,'linestyle':'dashdot','linecolor':'C0'},
+	{'plotType':'theory','facecolor':'C1','edgecolor':'C1','alpha':0.5,'linestyle':'dotted','linecolor':'C1'},
+	{'plotType':'theory','facecolor':'C2','edgecolor':'C2','alpha':0.5,'linestyle':'dashed','linecolor':'C2'},
+	{'plotType':'theory','facecolor':'C3','edgecolor':'C3','alpha':0.5,'linestyle':'dashdot','linecolor':'C3'},
+	{'plotType':'theory','facecolor':'C4','edgecolor':'C4','alpha':0.5,'linestyle':'dashdot','linecolor':'C4'},
+	{'plotType':'theory','facecolor':'C5','edgecolor':'C5','alpha':0.5,'linestyle':'dashdot','linecolor':'C5'},
 	{'plotType':'data','color':'k','fmt':'o','fillstyle':'none','markersize':5.0} #PP
 ];
 
@@ -87,8 +89,9 @@ plot = JPyPlotRatio.JPyPlotRatio(panels=(nrow,ncol),
 	#disableRatio=[0,1], # disable ratio..
 	#ratioSystPlot=True,
 	panelLabelLoc=(0.06,0.90),panelLabelSize=10,panelLabelAlign="left",
-	legendPanel=0,
-	legendLoc=(0.45,0.25),
+	#legendPanel=0,
+	#legendLoc=(0.45,0.25),
+	legendPanel={0:0,1:1},legendLoc={0:(0.27,0.20),1:(0.35,0.18)},
 	legendSize=9,xlabel=xtitle[0],ylabel=ytitle[0]);
 
 
@@ -102,26 +105,27 @@ for i in range(0,nrow):
 		index = i*ncol+j; # for each panel 
 		plot.GetAxes(index).set_xticks([0,0.1,0.2]);
 		grData = fData.Get("grIAADeltaEtaSig{}".format(histnames[i][j]));
-		plotMatrix[i,j] = plot.Add(index,grData,**dataTypePlotParams[0],label="5.02 TeV");
+		plotMatrix[i,j] = plot.Add(index,grData,**dataTypePlotParams[0],labelLegendId=0,label="5.02 TeV");
 		grData_sys = fData.Get("grIAADeltaEtaSig{}_syst".format(histnames[i][j]));
 		_,_,_,syst = JPyPlotRatio.TGraphErrorsToNumpy(ROOT.TGraphErrors(grData_sys));
 		plot.AddSyst(plotMatrix[i,j],syst);		
 		grMarton = fMarton.Get("grIAADeltaEta{}".format(histnames[i][j]));
-		plotMatrixMarton = plot.Add(index,grMarton,**dataTypePlotParams[1],label="2.76 TeV");
+		plotMatrixMarton = plot.Add(index,grMarton,**dataTypePlotParams[1],labelLegendId=0,label="2.76 TeV");
 		gr_sys = fMarton.Get("grAsymmIAADeltaEtaSystPointByPoint{}".format(histnames[i][j]));
 		#gr_sys.Print();
 		plot.AddSyst(plotMatrixMarton,gr_sys);
-
+		gr_sysSC = fMarton.Get("grIAADeltaEtaSystScaling{}".format(histnames[i][j]));
+		plotMatrixMartonSCsys = plot.Add(index,gr_sysSC,**dataTypePlotParams[6],labelLegendId=0,label="Scale error");
 		for im in range(len(Modelfiles)):
 			fModel[im].Print();	
 			grm = fModel[im].Get("hIAADeltaEtaSig{}".format(histnames[i][j]));
-			pm = plot.AddTH1(index,grm,**dataTypePlotParams[im+2],label=ModelLabel[im]);	
+			pm = plot.AddTH1(index,grm,**dataTypePlotParams[im+2],labelLegendId=1,label=ModelLabel[im]);	
 			plot.Ratio(pm,plotMatrix[i,j],style="default"); #Calculate and plot ratio between data and theory
 
 fData.Close();
 
-plot.GetPlot().text(0.37,0.70,toptitle,fontsize=9);
-plot.GetPlot().text(0.37,0.68,dataDetail,fontsize=9);
+plot.GetPlot().text(0.37,0.68,toptitle,fontsize=9);
+plot.GetPlot().text(0.37,0.66,dataDetail,fontsize=9);
 #plot.GetPlot().text(0.23,0.77,strXlong[xlong],fontsize=9);
 #plot.GetAxes(3).text(0.1,0.1,dataDetail,fontsize=9);
 for i in range(4):
