@@ -54,7 +54,7 @@ ylimits = [(0.3,1.8),(0.3,1.8)];
 rlimits = [(0.0,3.0)];
 
 histnames = [
-			 ["C00T02A03","C00T03A04"],  # check it with ROOT file Title
+			 ["C00T02A03","C00T02A04"],  # check it with ROOT file Title
 			 ["C00T03A04","C00T03A05"]#,"0_6_11"]
 			];
 
@@ -71,7 +71,7 @@ centrality =["0-5\%","5-10\%","10-20\%","20-40\%","40-60\%"];
 xtitle = ["$|\\Delta\\eta|$"];
 ytitle = ["$I_{AA}$"];
 # Following two must be added
-toptitle = "PbPb ALICE"; # need to add on the top
+toptitle = "PbPb 0--5\% ALICE"; # need to add on the top
 
 dataDetail = "$|\\eta| < 0.8$";
 obsPanel = [0,1];
@@ -116,8 +116,8 @@ for i in range(0,nrow):
 
 fData.Close();
 
-plot.GetPlot().text(0.2,0.68,toptitle,fontsize=9);
-plot.GetPlot().text(0.2,0.65,dataDetail,fontsize=9);
+plot.GetPlot().text(0.6,0.60,toptitle,fontsize=9);
+plot.GetPlot().text(0.6,0.56,dataDetail,fontsize=9);
 #plot.GetPlot().text(0.23,0.77,strXlong[xlong],fontsize=9);
 #plot.GetAxes(3).text(0.1,0.1,dataDetail,fontsize=9);
 for i in range(4):

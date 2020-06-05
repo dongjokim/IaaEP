@@ -52,11 +52,11 @@ dataTypePlotParams = [
 nrow = 2;
 ncol = 2;
 xlimits = [(0.005,0.6),(0.005,0.6)];
-ylimits = [(-0.1,1.1),(-0.1,1.1)];
+ylimits = [(-0.1,0.8),(-0.1,0.8)];
 rlimits = [(0.0,2.0),(0.0,2.0)];
 
 histnames = [
-			 ["C00T02A03","C00T03A04"],  # check it with ROOT file Title
+			 ["C00T02A03","C00T02A04"],  # check it with ROOT file Title
 			 ["C00T03A04","C00T03A05"]#,"0_6_11"]
 			];
 
@@ -71,7 +71,7 @@ xtitle = ["$|\\Delta\\eta|$"];
 ytitle = ["$\\frac{1}{N_{trigg}} \\frac{dN}{d|\\Delta\\eta|}$"];
 
 # Following two must be added
-toptitle = "PYTHIA8 $\\sqrt{s}$ = 2.76 TeV"; # need to add on the top
+toptitle = "PYTHIA8 pp $\\sqrt{s}$ = 2.76 TeV"; # need to add on the top
 #toptitle = "PbPb ALICE"
 dataDetail = "$|\\eta| < 0.8$";
 

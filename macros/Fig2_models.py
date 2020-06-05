@@ -58,10 +58,10 @@ nrow = 2;
 ncol = 2;
 xlimits = [(0.005,0.28),(0.005,0.28)];
 ylimits = [(0.3,1.8),(0.3,1.8)];
-rlimits = [(0.0,3.0),(0.0,3.0)];
+rlimits = [(0.0,1.5),(0.0,3.0)];
 
 histnames = [
-			 ["C00T02A03","C00T03A04"],  # check it with ROOT file Title
+			 ["C00T02A03","C00T02A04"],  # check it with ROOT file Title
 			 ["C00T03A04","C00T03A05"]#,"0_6_11"]
 			];
 
@@ -77,7 +77,7 @@ ytitle = ["$I_{AA}$"];
 
 # Following two must be added
 #toptitle = "PbPb $\\sqrt{s_{NN}}$ = 5.02 TeV"; # need to add on the top
-toptitle = "PbPb ALICE"
+toptitle = "PbPb 0--5\% ALICE"
 dataDetail = "$|\\eta| < 0.8$";
 
 
@@ -124,8 +124,8 @@ for i in range(0,nrow):
 
 fData.Close();
 
-plot.GetPlot().text(0.37,0.68,toptitle,fontsize=9);
-plot.GetPlot().text(0.37,0.66,dataDetail,fontsize=9);
+plot.GetPlot().text(0.3,0.68,toptitle,fontsize=9);
+plot.GetPlot().text(0.3,0.66,dataDetail,fontsize=9);
 #plot.GetPlot().text(0.23,0.77,strXlong[xlong],fontsize=9);
 #plot.GetAxes(3).text(0.1,0.1,dataDetail,fontsize=9);
 for i in range(4):
