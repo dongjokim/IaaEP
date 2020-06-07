@@ -45,11 +45,12 @@ double lowx=-0.8;
 double highx=0.8;
 double ly = -0.1;
 double hy = 0.4;
-double lowIAA = 0.;
-double highIAA = 2.;
+double lowIAA = 0.0;
+double highIAA = 4.;
 
 TLatex latexRun;
 TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV";
+Bool_t useGG = kTRUE;//kFALSE; // for background sub
 
 
 void run2() {
@@ -109,11 +110,11 @@ void run2() {
 
 void run2systematics() {
 
-	const int Nsets = 1;
+	const int Nsets = 3;
 	TString infiles[Nsets] = {
 		"sysErrors/_LHC15o_CentralBarrelTracking_hadronPID_FieldConfigs-8322_JCIAA_GlobalSDD_VTX08_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
-	    //,"sysErrors/_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root" 
-        //,"sysErrors/_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_829_Hybrid_JCIAA_TPCOnly_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+	    ,"sysErrors/_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root" 
+        ,"sysErrors/_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_829_Hybrid_JCIAA_TPCOnly_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 	};
 
 	TObjArray *outString[Nsets];
@@ -122,7 +123,11 @@ void run2systematics() {
 		outString[i] = infiles[i].Tokenize("/");
 		TString sDir = ((TObjString *)outString[i]->At(0))->GetString();
 		TString sName = ((TObjString *)outString[i]->At(1))->GetString();
+		if(useGG) {
+			outrootname[i] = Form("%s/Signal_GG%s",sDir.Data(),sName.Data());
+		} else {
 		outrootname[i] = Form("%s/Signal%s",sDir.Data(),sName.Data());
+		}
 		//cout << outrootname[i] << endl;
 	}
 	for(int i=0;i<Nsets;i++) { 
@@ -132,10 +137,10 @@ void run2systematics() {
 
 void runOnflyModel() {
 
-	const int Nsets = 2;
+	const int Nsets = 1;
 	TString infiles[Nsets] = {
 		"sysErrors/_MCGen_PbPb_AMPT_5TeV_modPars2_JCIaa_KineOnly_MCGen_pp_amptpp_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+		//"sysErrors/_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 	};
 
 	TObjArray *outString[Nsets];
@@ -144,10 +149,14 @@ void runOnflyModel() {
 		outString[i] = infiles[i].Tokenize("/");
 		TString sDir = ((TObjString *)outString[i]->At(0))->GetString();
 		TString sName = ((TObjString *)outString[i]->At(1))->GetString();
-		outrootname[i] = Form("%s/Signal%s",sDir.Data(),sName.Data());
+		if(useGG) {
+			outrootname[i] = Form("%s/Signal_GG%s",sDir.Data(),sName.Data());
+		} else {
+			outrootname[i] = Form("%s/Signal%s",sDir.Data(),sName.Data());
+		}
 		//cout << outrootname[i] << endl;
 	}
-	for(int i=0;i<1;i++) { 
+	for(int i=0;i<Nsets;i++) { 
 		DoAnalysis(infiles[i],outrootname[i]);
 	}
 //	DoAnalysis ("sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root","sysErrors/_Signal_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root");
@@ -168,6 +177,7 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 	AssocPtBorders             = (TVector*) fin->Get("AssocPtBorders");
 	CentBinBorders             = (TVector*) fin->Get("CentBinBorders");
 
+	//int NumCent[2] = {1,1};// for jewel
 	int NumCent[2]    =  { CentBinBorders->GetNoElements()-2, 1}; //{1,1};// for jewel
 	int NumPtt     = TriggPtBorders->GetNoElements()-1;
 	int NumPta     = AssocPtBorders->GetNoElements()-1;
@@ -203,6 +213,9 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 	// Fit functions
 	double fitRange = -1;
 	double MaxEta = 0.8;
+	// GG fit
+	double zeropar_gamma = 1.2;       // width, exponential part, alpha
+    double firstpar_w = 0.3;     // division part, beta
 	for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp  //(*fCentralityBinBorders)[i+1]
 		for(int ic=0; ic<NumCent[idtyp]; ic++){
 			for(int iptt=0; iptt<NPTT; iptt++){
@@ -213,7 +226,10 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 					fKaplan[idtyp][ic][iptt][ipta] = new TF1(fitname, FitKaplan, 0, maxRange,4); 
 					// GG
 					fitname = Form("GG%02d%02d%02d%02d", idtyp, ic, iptt, ipta);
-					fGG[idtyp][ic][iptt][ipta]     = new TF1(fitname, FitGeneralizedGausPlusBG, -1.6, 1.6, 4); // 4 Parameters
+					fGG[idtyp][ic][iptt][ipta]     = new TF1(fitname, FitGeneralizedGausPlusBG, 0,maxRange, 4); // 4 Parameters
+					fGG[idtyp][ic][iptt][ipta]->SetParameter(0,zeropar_gamma);
+					fGG[idtyp][ic][iptt][ipta]->SetParameter(1,firstpar_w);
+				    fGG[idtyp][ic][iptt][ipta]->SetParLimits(1, 0.05, 3.3);
 
 					//estimate fit parametes
 					TH1D *hFlipDeta = (TH1D*) hDeltaEtaFlip[idtyp][ic][iptt][ipta];
@@ -225,9 +241,17 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 					//fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(3,2e-3,10);
 					TString opt = "QRN";
 					hFlipDeta->Fit((TF1*) fKaplan[idtyp][ic][iptt][ipta],opt);
+					hFlipDeta->Fit((TF1*) fGG[idtyp][ic][iptt][ipta],opt);
 					bg         = fKaplan[idtyp][ic][iptt][ipta]->GetParameter(0);
 					double ebg = fKaplan[idtyp][ic][iptt][ipta]->GetParError(0);
-          			hDeltaEtaSig[idtyp][ic][iptt][ipta] = SubtractBg(hFlipDeta,bg,ebg); //subtract bg
+					double bg_GG = fGG[idtyp][ic][iptt][ipta]->GetParameter(3);
+					double ebg_GG = fGG[idtyp][ic][iptt][ipta]->GetParError(3);
+					cout << Form("bg = %.3f:%.3f, err= %.3f:%.3f",bg,bg_GG,ebg,ebg_GG) << endl;
+					if(useGG) {
+						hDeltaEtaSig[idtyp][ic][iptt][ipta] = SubtractBg(hFlipDeta,bg_GG,ebg_GG); //subtract bg
+					} else {
+          			    hDeltaEtaSig[idtyp][ic][iptt][ipta] = SubtractBg(hFlipDeta,bg,ebg); //subtract bg
+          			}
 				} // ipta
 			} // iptt 
 		} // ic
@@ -270,6 +294,9 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 					for(int ipta=0;ipta<NPTA;ipta++) {
 						hDeltaEtaSig[idtyp][ic][iptt][ipta]->Write(Form("hDeltaEtaSig%02dC%02dT%02dA%02d",idtyp,ic,iptt,ipta));
 						if(idtyp==AA) hIAADeltaEtaSig[ic][iptt][ipta]->Write(Form("hIAADeltaEtaSigC%02dT%02dA%02d",ic,iptt,ipta));
+						hDeltaEtaFlip[idtyp][ic][iptt][ipta]->Write(Form("hDeltaEtaFlipC%02dT%02dA%02d",ic,iptt,ipta));
+						fKaplan[idtyp][ic][iptt][ipta]->Write(Form("fKaplanDeltaEtaSigC%02dT%02dA%02d",ic,iptt,ipta));
+						fGG[idtyp][ic][iptt][ipta]->Write(Form("fGGDeltaEtaSigC%02dT%02dA%02d",ic,iptt,ipta));
 					} // pta
 				} // ptt 
 			} // cent
@@ -352,6 +379,12 @@ void DrawAfterFlip(int iPTT, int iPTA) {
 		fKaplan[AA][ic][iPTT][iPTA]->Draw("same");
 		fKaplan[pp][0][iPTT][iPTA]->SetLineColor(kBlue);
 		fKaplan[pp][0][iPTT][iPTA]->Draw("same");
+
+		fGG[AA][ic][iPTT][iPTA]->SetLineStyle(2);
+		fGG[pp][0][iPTT][iPTA]->SetLineStyle(2);
+		fGG[AA][ic][iPTT][iPTA]->Draw("same");
+		fGG[pp][0][iPTT][iPTA]->SetLineColor(kBlue);
+		fGG[pp][0][iPTT][iPTA]->Draw("same");
 
 		leg->AddEntry(hDeltaEtaFlip[AA][ic][iPTT][iPTA],hDeltaEtaFlip[AA][ic][iPTT][iPTA]->GetTitle(),"p");
 		leg->AddEntry(hDeltaEtaFlip[pp][0][iPTT][iPTA],hDeltaEtaFlip[pp][0][iPTT][iPTA]->GetTitle(),"p");

@@ -20,6 +20,7 @@ fMarton    = ROOT.TFile("results/Final_Marton_graphs.root","read");
 
 Modelfiles = [
 			  "sysErrors/Signal_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+			  #"sysErrors/Signal_GG_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 			  "sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC17l3b_fast_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 #			  "sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 #   			  "sysErrors/Signal_AMPT_LHC13f3a_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
@@ -31,6 +32,7 @@ fModel = [ROOT.TFile(elm) for elm in Modelfiles];
 
 ModelLabel = [
 "~~~JEWEL",
+#"~~~JEWEL GG",
 "~~~AMPT String Melting",
 #"~~~AMPT default"
 #,"AMPT ST Fly"
@@ -47,7 +49,7 @@ dataTypePlotParams = [
 	{'plotType':'theory','facecolor':'C1','edgecolor':'C1','alpha':0.5,'linestyle':'dotted','linecolor':'C1'},
 	{'plotType':'theory','facecolor':'C2','edgecolor':'C2','alpha':0.5,'linestyle':'dashed','linecolor':'C2'},
 	{'plotType':'theory','facecolor':'C3','edgecolor':'C3','alpha':0.5,'linestyle':'dashdot','linecolor':'C3'},
-	{'plotType':'theory','facecolor':'C4','edgecolor':'C4','alpha':0.5,'linestyle':'dashdot','linecolor':'C4'},
+	{'plotType':'theory','facecolor':'xkcd:silver','edgecolor':'xkcd:silver','alpha':0.5,'linestyle':'solid','linecolor':'xkcd:silver'},
 	{'plotType':'theory','facecolor':'C5','edgecolor':'C5','alpha':0.5,'linestyle':'dashdot','linecolor':'C5'},
 	{'plotType':'data','color':'k','fmt':'o','fillstyle':'none','markersize':5.0} #PP
 ];

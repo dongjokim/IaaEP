@@ -41,9 +41,9 @@ dataTypePlotParams = [
 	{'plotType':'data','color':'r','fmt':'o','markersize':5.0},
 	{'plotType':'data','color':'k','fmt':'s','markersize':5.0},
 	{'plotType':'theory','facecolor':'C0','edgecolor':'C0','alpha':0.5,'linestyle':'solid','linecolor':'C0'},
-	{'plotType':'theory','facecolor':'C1','edgecolor':'C1','alpha':0.5,'linestyle':'dotted','linecolor':'C0'},
-	{'plotType':'theory','facecolor':'C2','edgecolor':'C2','alpha':0.5,'linestyle':'dashed','linecolor':'C0'},
-	{'plotType':'theory','facecolor':'C3','edgecolor':'C3','alpha':0.5,'linestyle':'dashdot','linecolor':'C0'},
+	{'plotType':'theory','facecolor':'C1','edgecolor':'C1','alpha':0.5,'linestyle':'dotted','linecolor':'C1'},
+	{'plotType':'theory','facecolor':'C2','edgecolor':'C2','alpha':0.5,'linestyle':'dashed','linecolor':'C2'},
+	{'plotType':'theory','facecolor':'C3','edgecolor':'C3','alpha':0.5,'linestyle':'dashdot','linecolor':'C3'},
 	{'plotType':'data','color':'k','fmt':'o','fillstyle':'none','markersize':5.0} #PP
 ];
 
@@ -52,7 +52,7 @@ dataTypePlotParams = [
 nrow = 2;
 ncol = 2;
 xlimits = [(0.005,0.6),(0.005,0.6)];
-ylimits = [(-0.1,0.85),(-0.1,0.85)];
+ylimits = [(-0.1,0.9),(-0.1,0.9)];
 rlimits = [(0.0,2.0),(0.0,2.0)];
 
 histnames = [
@@ -85,7 +85,7 @@ plot = JPyPlotRatio.JPyPlotRatio(panels=(nrow,ncol),
 	#ratioSystPlot=True,
 	panelLabelLoc=(0.06,0.90),panelLabelSize=10,panelLabelAlign="left",
 	legendPanel=0,
-	legendLoc=(0.5,0.65),
+	legendLoc=(0.55,0.65),
 	legendSize=9,xlabel=xtitle[0],ylabel=ytitle[0]);
 
 

@@ -67,9 +67,12 @@ TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV";
 // vtx change..
 const int Nsets = 3;
 TString infiles[Nsets] = {
-	"sysErrors/Signal_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	"sysErrors/Signal_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_829_Hybrid_JCIAA_TPCOnly_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	"sysErrors/Signal_LHC15o_CentralBarrelTracking_hadronPID_FieldConfigs-8322_JCIAA_GlobalSDD_VTX08_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+	"sysErrors/Signal_GG_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_GG_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_829_Hybrid_JCIAA_TPCOnly_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_GG_LHC15o_CentralBarrelTracking_hadronPID_FieldConfigs-8322_JCIAA_GlobalSDD_VTX08_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+//	"sysErrors/Signal_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+//	"sysErrors/Signal_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_829_Hybrid_JCIAA_TPCOnly_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+//	"sysErrors/Signal_LHC15o_CentralBarrelTracking_hadronPID_FieldConfigs-8322_JCIAA_GlobalSDD_VTX08_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 };
 TFile *fin[Nsets];
 
@@ -314,7 +317,7 @@ void ObtainTotalSyst(){
 
 void SaveFinalResults(){
 
-	TFile *fout = new TFile("results/Iaa_PbPb5.02TeV_results.root","recreate");
+	TFile *fout = new TFile("results/Iaa_PbPb5.02TeV_GG_results.root","recreate");
 	for(int ic=0; ic<NumCent[AA]; ic++){
     	for(int iptt=0; iptt<NPTT; iptt++){
         	for(int ipta=0;ipta<NPTA;ipta++) {

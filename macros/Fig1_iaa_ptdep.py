@@ -42,7 +42,7 @@ ModelLabel = [
 dataTypePlotParams = [
 	{'plotType':'data','color':'r','fmt':'o','markersize':5.0},
 	{'plotType':'data','color':'k','fmt':'s','fillstyle':'none','markersize':5.0},
-	{'plotType':'theory','facecolor':'C0','edgecolor':'C0','alpha':0.5,'linestyle':'solid','linecolor':'C0'},
+	{'plotType':'theory','facecolor':'xkcd:silver','edgecolor':'xkcd:silver','alpha':0.5,'linestyle':'solid','linecolor':'xkcd:silver'},
 ];
 
 
