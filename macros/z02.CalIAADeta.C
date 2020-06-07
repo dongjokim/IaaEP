@@ -294,9 +294,9 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 					for(int ipta=0;ipta<NPTA;ipta++) {
 						hDeltaEtaSig[idtyp][ic][iptt][ipta]->Write(Form("hDeltaEtaSig%02dC%02dT%02dA%02d",idtyp,ic,iptt,ipta));
 						if(idtyp==AA) hIAADeltaEtaSig[ic][iptt][ipta]->Write(Form("hIAADeltaEtaSigC%02dT%02dA%02d",ic,iptt,ipta));
-						hDeltaEtaFlip[idtyp][ic][iptt][ipta]->Write(Form("hDeltaEtaFlipC%02dT%02dA%02d",ic,iptt,ipta));
-						fKaplan[idtyp][ic][iptt][ipta]->Write(Form("fKaplanDeltaEtaSigC%02dT%02dA%02d",ic,iptt,ipta));
-						fGG[idtyp][ic][iptt][ipta]->Write(Form("fGGDeltaEtaSigC%02dT%02dA%02d",ic,iptt,ipta));
+						hDeltaEtaFlip[idtyp][ic][iptt][ipta]->Write(Form("hDeltaEtaFlip%02dC%02dT%02dA%02d",idtyp,ic,iptt,ipta));
+						fKaplan[idtyp][ic][iptt][ipta]->Write(Form("fKaplanDeltaEtaSig%02dC%02dT%02dA%02d",idtyp,ic,iptt,ipta));
+						fGG[idtyp][ic][iptt][ipta]->Write(Form("fGGDeltaEtaSig%02dC%02dT%02dA%02d",idtyp,ic,iptt,ipta));
 					} // pta
 				} // ptt 
 			} // cent
