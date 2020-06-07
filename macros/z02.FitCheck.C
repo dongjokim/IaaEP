@@ -1,6 +1,7 @@
 
 #include "include/Filipad.h"
 #include "include/rootcommon.h"
+#include "TVirtualFitter.h"
 
 TGraphErrors* get_ratio( TGraphErrors * l, TGraphErrors *r );
 double FitGeneralizedGaus(double *x, double *par);
@@ -107,6 +108,15 @@ void DrawAfterFlip(int iPTT, int iPTA) {
 
 		latexRun.DrawLatexNDC( 0.47, 0.85 ,strRun);
 
+		double zeropar_gamma = 1.2;       // width, exponential part, alpha
+        double firstpar_w = 0.3;     // division part, beta
+        TString opt = "QRN";
+		TString fitname = Form("fGG%02d%02d%02d", ic, iPTT, iPTA);
+		TF1 *fFitGG     = new TF1(fitname, FitGeneralizedGausPlusBG, 0,0.8, 4); // 4 Parameters
+		fFitGG->SetParameter(0,zeropar_gamma);
+		fFitGG->SetParameter(1,firstpar_w);
+		fFitGG->SetParLimits(1, 0.05, 3.3);
+
 		hDeltaEtaFlip[AA][ic][iPTT][iPTA]->SetMarkerStyle(20);
 		hDeltaEtaFlip[AA][ic][iPTT][iPTA]->Draw("p,same");
 		hDeltaEtaFlip[pp][0][iPTT][iPTA]->SetMarkerStyle(21);
@@ -115,6 +125,16 @@ void DrawAfterFlip(int iPTT, int iPTA) {
 		fKaplan[pp][0][iPTT][iPTA]->SetLineColor(kBlue);
 		fKaplan[pp][0][iPTT][iPTA]->Draw("same");
 
+		hDeltaEtaFlip[AA][ic][iPTT][iPTA]->Fit((TF1*) fFitGG,opt);
+    	/*Create a histogram to hold the confidence intervals*/
+   		TH1D *hint = new TH1D("hint","Fitted gaussian with .95 conf.band", 100, 0, 0.8);
+   		(TVirtualFitter::GetFitter())->GetConfidenceIntervals(hint);
+   		//Now the "hint" histogram has the fitted function values as the
+   		//bin contents and the confidence intervals as bin errors
+   		hint->SetStats(kFALSE);
+   		hint->SetFillColor(kGray);
+   		hint->Draw("e3 same");
+   
 		fGG[AA][ic][iPTT][iPTA]->SetLineStyle(2);
 		fGG[pp][0][iPTT][iPTA]->SetLineStyle(2);
 		fGG[AA][ic][iPTT][iPTA]->Draw("same");
