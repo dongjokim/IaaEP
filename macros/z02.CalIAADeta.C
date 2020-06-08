@@ -50,47 +50,19 @@ double highIAA = 4.;
 
 TLatex latexRun;
 TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV";
-Bool_t useGG = kTRUE;//kFALSE; // for background sub
+Bool_t useGG = kTRUE; // for background sub
+//Bool_t useGG = kFALSE; // for background sub
 
+void run1() {
 
-void run2() {
-
-	const int Nsets = 34;
+	const int Nsets = 6;
 	TString infiles[Nsets] = {
 		"sysErrors/_AMPT_LHC13f3a_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3a_JCIAA_V0C_E00_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3a_JCIAA_V0C_E90_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5175_JCIAA_TPCOnly_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root", // 31
-		"sysErrors/_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root", // 30
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC17l3b_cent_woSDD_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC17l3b_cent_woSDD_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC17l3b_fast_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC17l3b_fast_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root", // new data w.o correct filter bit
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_V0C_E00_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_V0C_E90_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC10h_AOD86_MgFpMgFm_5317_JCIAA_V0C_E90_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_QF1_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF1_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC15o_GlobalSDD_JCIAA_GlobalSDD_pythia8230_pp5.02TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC15o_TPCOnly_JCIAA_TPCOnly_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_TPC_E00_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_TPC_E90_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_V0A_E00_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_V0A_E90_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_V0P_E00_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_V0P_E90_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+		"sysErrors/_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 	};
 
 	TObjArray *outString[Nsets];
@@ -99,10 +71,14 @@ void run2() {
 		outString[i] = infiles[i].Tokenize("/");
 		TString sDir = ((TObjString *)outString[i]->At(0))->GetString();
 		TString sName = ((TObjString *)outString[i]->At(1))->GetString();
+		if(useGG) {
+			outrootname[i] = Form("%s/Signal_GG%s",sDir.Data(),sName.Data());
+		} else {
 		outrootname[i] = Form("%s/Signal%s",sDir.Data(),sName.Data());
+		}
 		//cout << outrootname[i] << endl;
 	}
-	for(int i=0;i<3;i++) { 
+	for(int i=0;i<Nsets;i++) { 
 		DoAnalysis(infiles[i],outrootname[i]);
 	}
 //	DoAnalysis ("sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root","sysErrors/_Signal_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root");
@@ -246,7 +222,7 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 					double ebg = fKaplan[idtyp][ic][iptt][ipta]->GetParError(0);
 					double bg_GG = fGG[idtyp][ic][iptt][ipta]->GetParameter(3);
 					double ebg_GG = fGG[idtyp][ic][iptt][ipta]->GetParError(3);
-					cout << Form("bg = %.3f:%.3f, err= %.3f:%.3f",bg,bg_GG,ebg,ebg_GG) << endl;
+					//cout << Form("bg = %.3f:%.3f, err= %.3f:%.3f",bg,bg_GG,ebg,ebg_GG) << endl;
 					if(useGG) {
 						hDeltaEtaSig[idtyp][ic][iptt][ipta] = SubtractBg(hFlipDeta,bg_GG,ebg_GG); //subtract bg
 					} else {
