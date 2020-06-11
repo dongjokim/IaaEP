@@ -196,16 +196,19 @@ void runAMPT(){
 
 void runJEWEL(){
 
-	const int NAA = 1;
+	const int NAA = 2;
 	TString fileAA[NAA] = {
-		"legotrain_JCIaa/mc/JCIaa_MCGen_PbPb_JEWL_0_10_PtHard03_Recoil.root"
+		"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1750_20200609-1158-JEWEL_0_10_PtHard03.root",
+		"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1751_20200609-1158-JEWEL_0_10_PtHard03_keepRecoil.root"
 	//	"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1744_20200519-0937-JEWEL_0_10_PtHard03.root"
 	};
 	TString dirAA[NAA] = {
+		"JCIaa_KineOnly",
 		"JCIaa_KineOnly"
 	};
 	TString commentAA[NAA] = {
-		"JEWEL"
+		"JEWEL_v2.0.2",
+		"JEWEL_v2.0.2_KeepRecoil"
 	};
 
 	const int NPP = 1;
@@ -214,7 +217,8 @@ void runJEWEL(){
 	};
 
 	TString filePP[NPP] = {
-		"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1746_20200521-1142-JEWEL_vacuum_PtHard03.root" 
+		"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1752_20200609-1158-JEWEL_vacuum_PtHard03.root" 
+		//"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1746_20200521-1142-JEWEL_vacuum_PtHard03.root" 
 	};
 	TString commentPP[NPP] = {
 		"JEWEL_vacuum"
@@ -365,7 +369,8 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	cout <<"pp"<<endl;
 	cout <<"bins:  "<<" eta="<< NumEtaGaps <<" zvtx="<<nzvtx[pp]<< endl; 
 
-	int NumCent[2]    = { CentBinBorders[AA]->GetNoElements()-2, 1}; //{1,1}; // only for jewel // 5TEV data less cent 1
+	int NumCent[2]    = {1,1}; // only for jewel // 5TEV data less cent 1
+	//int NumCent[2]    = { CentBinBorders[AA]->GetNoElements()-2, 1}; //{1,1}; // only for jewel // 5TEV data less cent 1
 	NumEtaGaps = EtaGapThresholds[AA]->GetNoElements()-1; 
 	int NumPtt     = TriggPtBorders[AA]->GetNoElements()-1;
 	int NumPta     = AssocPtBorders[AA]->GetNoElements()-1;

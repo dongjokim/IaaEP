@@ -19,24 +19,20 @@ fData    = ROOT.TFile("results/Iaa_PbPb5.02TeV_results.root","read");
 fMarton    = ROOT.TFile("results/Final_Marton_graphs.root","read");
 
 Modelfiles = [
-			  "sysErrors/Signal_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+			  "sysErrors/Signal_JEWEL_v2.0.2_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+			  "sysErrors/Signal_JEWEL_v2.0.2_KeepRecoil_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+#			  "sysErrors/Signal_GG_JEWEL_v2.0.2_KeepRecoil_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root", # no difference GG
 			  #"sysErrors/Signal_GG_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-			  "sysErrors/Signal_AMPT_LHC13f3c_JCIaa_KineOnly_pythia8230_pp5.02TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-			  #"sysErrors/Signal_GG_AMPT_LHC13f3c_JCIaa_KineOnly_pythia8230_pp5.02TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root" # same with GG
-#			  "sysErrors/Signal_AMPT_LHC13f3a_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
-#			  "results/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
-#			  "results/Signal_AMPT_LHC13f3a_JCIaa_KineOnly_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
-#			  "sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
-#   			  "sysErrors/Signal_AMPT_LHC13f3a_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
-#			  "sysErrors/Signal_MCGen_PbPb_AMPT_5TeV_modPars2_JCIaa_KineOnly_MCGen_pp_amptpp_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+			  "sysErrors/Signal_AMPT_LHC13f3c_JCIaa_KineOnly_pythia8230_pp5.02TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 			];
 
 
 fModel = [ROOT.TFile(elm) for elm in Modelfiles];
 
 ModelLabel = [
-"~~~JEWEL",
-#"~~~JEWEL GG",
+"~~~JEWEL ",
+"~~~JEWEL with Recoils",
+#"~~~JEWEL with Recoil GG",
 "~~~AMPT String Melting",
 #"~~~AMPT String Melting GG",
 #"~~~AMPT default"

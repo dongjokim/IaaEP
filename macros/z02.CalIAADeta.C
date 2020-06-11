@@ -50,8 +50,8 @@ double highIAA = 4.;
 
 TLatex latexRun;
 TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV";
-Bool_t useGG = kTRUE; // for background sub
-//Bool_t useGG = kFALSE; // for background sub
+//Bool_t useGG = kTRUE; // for background sub
+Bool_t useGG = kFALSE; // for background sub
 
 void run1() {
 
@@ -110,9 +110,10 @@ void run2systematics() {
 
 void runOnflyModel() {
 
-	const int Nsets = 1;
+	const int Nsets = 2;
 	TString infiles[Nsets] = {
-		"sysErrors/_MCGen_PbPb_AMPT_5TeV_modPars2_JCIaa_KineOnly_MCGen_pp_amptpp_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		"sysErrors/_JEWEL_v2.0.2_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		"sysErrors/_JEWEL_v2.0.2_KeepRecoil_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 		//"sysErrors/_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 	};
 
@@ -150,8 +151,8 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 	AssocPtBorders             = (TVector*) fin->Get("AssocPtBorders");
 	CentBinBorders             = (TVector*) fin->Get("CentBinBorders");
 
-	//int NumCent[2] = {1,1};// for jewel
-	int NumCent[2]    =  { CentBinBorders->GetNoElements()-2, 1}; //{1,1};// for jewel
+	int NumCent[2] = {1,1};// for jewel
+	//int NumCent[2]    =  { CentBinBorders->GetNoElements()-2, 1}; //{1,1};// for jewel
 	int NumPtt     = TriggPtBorders->GetNoElements()-1;
 	int NumPta     = AssocPtBorders->GetNoElements()-1;
 	cout <<"PbPb"<<endl;
