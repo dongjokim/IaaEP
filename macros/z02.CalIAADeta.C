@@ -50,8 +50,8 @@ double highIAA = 4.;
 
 TLatex latexRun;
 TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV";
-//Bool_t useGG = kTRUE; // for background sub
-Bool_t useGG = kFALSE; // for background sub
+Bool_t useGG = kTRUE; // for background sub
+//Bool_t useGG = kFALSE; // for background sub
 
 void run1() {
 
@@ -112,8 +112,10 @@ void runOnflyModel() {
 
 	const int Nsets = 2;
 	TString infiles[Nsets] = {
-		"sysErrors/_JEWEL_v2.0.2_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_JEWEL_v2.0.2_KeepRecoil_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+		"sysErrors/_JEWEL_v2.0.2_sqrts2760_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		"sysErrors/_JEWEL_v2.0.2_KeepRecoil_sqrts2760_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+		//"sysErrors/_JEWEL_v2.0.2_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		//"sysErrors/_JEWEL_v2.0.2_KeepRecoil_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 		//"sysErrors/_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 	};
 

@@ -21,6 +21,8 @@ fMarton    = ROOT.TFile("results/Final_Marton_graphs.root","read");
 Modelfiles = [
 			  "sysErrors/Signal_JEWEL_v2.0.2_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 			  "sysErrors/Signal_JEWEL_v2.0.2_KeepRecoil_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+			  "sysErrors/Signal_JEWEL_v2.0.2_sqrts2760_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+			  "sysErrors/Signal_JEWEL_v2.0.2_KeepRecoil_sqrts2760_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 #			  "sysErrors/Signal_GG_JEWEL_v2.0.2_KeepRecoil_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root", # no difference GG
 			  #"sysErrors/Signal_GG_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 			  "sysErrors/Signal_AMPT_LHC13f3c_JCIaa_KineOnly_pythia8230_pp5.02TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
@@ -32,7 +34,8 @@ fModel = [ROOT.TFile(elm) for elm in Modelfiles];
 ModelLabel = [
 "~~~JEWEL ",
 "~~~JEWEL with Recoils",
-#"~~~JEWEL with Recoil GG",
+"~~~JEWEL 2.76",
+"~~~JEWEL with Recoils 2,76",
 "~~~AMPT String Melting",
 #"~~~AMPT String Melting GG",
 #"~~~AMPT default"
