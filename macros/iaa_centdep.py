@@ -16,11 +16,11 @@ import JPyPlotRatio
 
 #fData    = ROOT.TFile("sysErrors/Signal_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root","read");
 fData    = ROOT.TFile("results/Iaa_PbPb5.02TeV_results.root","read");
-fMarton    = ROOT.TFile("results/Fianl_Marton_graphs.root","read");
+fMarton    = ROOT.TFile("results/Final_Marton_graphs.root","read");
 
 Modelfiles = [
 			  "sysErrors/Signal_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-			  "sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+			  "sysErrors/Signal_AMPT_LHC13f3c_JCIaa_KineOnly_pythia8230_pp5.02TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 #    		  "sysErrors/Signal_AMPT_LHC13f3a_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 #			  "sysErrors/Signal_MCGen_PbPb_AMPT_5TeV_modPars2_JCIaa_KineOnly_MCGen_pp_amptpp_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 			];
@@ -70,7 +70,7 @@ plables = [
 			"$8.0 <p_{{Tt}}< 15.0 \\otimes 4.0<p_{{Ta}}< 6.0$","$8.0 <p_{{Tt}}< 15.0 \\otimes 6.0<p_{{Ta}}< 8.0$",
 		 ];
 
-centrality =["0-5\%","5-10\%","10-20\%","20-40\%"];#,"40-60\%"];
+centrality =["0-5\%","5-10\%","10-20\%","20-40\%","40-60\%"];#,"60-80\%"];
 xtitle = ["$|\\Delta\\eta|$"];
 ytitle = ["$I_{AA}$"];
 # Following two must be added
@@ -98,17 +98,17 @@ for i in range(0,nrow):
 		index = i*ncol+j; # for each panel
 		plot.GetAxes(index).set_xticks([0,0.1,0.2]); 
 		for ic in range(len(centrality)):
-			#grData = fData.Get("grIAADeltaEtaSigC{:02d}{}".format(ic,histnames[i][j]));
-			#plotMatrix = plot.Add(index,grData,**dataTypePlotParams[ic],label=centrality[ic]);
-			#grData_sys = fData.Get("grIAADeltaEtaSigC{:02d}{}_syst".format(ic,histnames[i][j]));
-			#_,_,_,syst = JPyPlotRatio.TGraphErrorsToNumpy(ROOT.TGraphErrors(grData_sys));
-			#plot.AddSyst(plotMatrix,syst);
+			grData = fData.Get("grIAADeltaEtaSigC{:02d}{}".format(ic,histnames[i][j]));
+			plotMatrix = plot.Add(index,grData,**dataTypePlotParams[ic],label=centrality[ic]);
+			grData_sys = fData.Get("grIAADeltaEtaSigC{:02d}{}_syst".format(ic,histnames[i][j]));
+			_,_,_,syst = JPyPlotRatio.TGraphErrorsToNumpy(ROOT.TGraphErrors(grData_sys));
+			plot.AddSyst(plotMatrix,syst);
 			grMarton = fMarton.Get("grIAADeltaEtaC{:02d}{}".format(ic,histnames[i][j]));
 			#grMarton.Print();
-			plotMatrixMarton = plot.Add(index,grMarton,**dataTypePlotParams[ic],label=centrality[ic]);
-			gr_sys = fMarton.Get("grAsymmIAADeltaEtaSystPointByPointC{:02d}{}".format(ic,histnames[i][j]));
+			#plotMatrixMarton = plot.Add(index,grMarton,**dataTypePlotParams[ic],label=centrality[ic]);
+			#gr_sys = fMarton.Get("grAsymmIAADeltaEtaSystPointByPointC{:02d}{}".format(ic,histnames[i][j]));
 			#gr_sys.Print();
-			plot.AddSyst(plotMatrixMarton,gr_sys);
+			#plot.AddSyst(plotMatrixMarton,gr_sys);
 			#plot.Ratio(plotMatrixMarton,plotMatrix,style="default"); #Calculate and plot ratio between data and theory
 		
 fData.Close();
