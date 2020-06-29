@@ -198,8 +198,10 @@ void runJEWEL(){
 
 	const int NAA = 2;
 	TString fileAA[NAA] = {
-		"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1755_20200611-1617-JEWEL_0_10_PtHard03_sqrts2760.root",
-		"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1756_20200611-1617-JEWEL_0_10_PtHard03_keepRecoil_sqrts2760.root"
+		"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1759_20200616-0853-JEWEL_0_5_PtHard03_sqrts2760.root",
+		"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1760_20200615-1414-JEWEL_0_5_PtHard03_keepRecoil_sqrts2760.root"
+		//"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1755_20200611-1617-JEWEL_0_10_PtHard03_sqrts2760.root",
+		//"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1756_20200611-1617-JEWEL_0_10_PtHard03_keepRecoil_sqrts2760.root"
 		//"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1750_20200609-1158-JEWEL_0_10_PtHard03.root",
 		//"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1751_20200609-1158-JEWEL_0_10_PtHard03_keepRecoil.root"
 	//	"legotrain_JCIaa/mc/JCIaa_legotrain_MCGen_PbPb-1744_20200519-0937-JEWEL_0_10_PtHard03.root"
@@ -209,8 +211,8 @@ void runJEWEL(){
 		"JCIaa_KineOnly"
 	};
 	TString commentAA[NAA] = {
-		"JEWEL_v2.0.2_sqrts2760",
-		"JEWEL_v2.0.2_KeepRecoil_sqrts2760"
+		"JEWEL_v2.0.2_sqrts2760_0_5",
+		"JEWEL_v2.0.2_KeepRecoil_sqrts2760_0_5"
 		//"JEWEL_v2.0.2",
 		//"JEWEL_v2.0.2_KeepRecoil"
 	};

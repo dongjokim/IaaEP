@@ -33,7 +33,7 @@ TF1 *fGG[2][kCENT][kMAXD][kMAXD]; //
 
 Bool_t saveRoot = kTRUE;
 double lowx=-0.8;
-double highx=0.8;
+double highx=1.6;
 double ly = -0.1;
 double hy = 0.4;
 double lowIAA = 0.0;

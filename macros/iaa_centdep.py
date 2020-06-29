@@ -98,17 +98,17 @@ for i in range(0,nrow):
 		index = i*ncol+j; # for each panel
 		plot.GetAxes(index).set_xticks([0,0.1,0.2]); 
 		for ic in range(len(centrality)):
-			grData = fData.Get("grIAADeltaEtaSigC{:02d}{}".format(ic,histnames[i][j]));
-			plotMatrix = plot.Add(index,grData,**dataTypePlotParams[ic],label=centrality[ic]);
-			grData_sys = fData.Get("grIAADeltaEtaSigC{:02d}{}_syst".format(ic,histnames[i][j]));
-			_,_,_,syst = JPyPlotRatio.TGraphErrorsToNumpy(ROOT.TGraphErrors(grData_sys));
-			plot.AddSyst(plotMatrix,syst);
+			#grData = fData.Get("grIAADeltaEtaSigC{:02d}{}".format(ic,histnames[i][j]));
+			#plotMatrix = plot.Add(index,grData,**dataTypePlotParams[ic],label=centrality[ic]);
+			#grData_sys = fData.Get("grIAADeltaEtaSigC{:02d}{}_syst".format(ic,histnames[i][j]));
+			#_,_,_,syst = JPyPlotRatio.TGraphErrorsToNumpy(ROOT.TGraphErrors(grData_sys));
+			#plot.AddSyst(plotMatrix,syst);
 			grMarton = fMarton.Get("grIAADeltaEtaC{:02d}{}".format(ic,histnames[i][j]));
 			#grMarton.Print();
-			#plotMatrixMarton = plot.Add(index,grMarton,**dataTypePlotParams[ic],label=centrality[ic]);
-			#gr_sys = fMarton.Get("grAsymmIAADeltaEtaSystPointByPointC{:02d}{}".format(ic,histnames[i][j]));
+			plotMatrixMarton = plot.Add(index,grMarton,**dataTypePlotParams[ic],label=centrality[ic]);
+			gr_sys = fMarton.Get("grAsymmIAADeltaEtaSystPointByPointC{:02d}{}".format(ic,histnames[i][j]));
 			#gr_sys.Print();
-			#plot.AddSyst(plotMatrixMarton,gr_sys);
+			plot.AddSyst(plotMatrixMarton,gr_sys);
 			#plot.Ratio(plotMatrixMarton,plotMatrix,style="default"); #Calculate and plot ratio between data and theory
 		
 fData.Close();

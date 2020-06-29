@@ -19,24 +19,25 @@ fData    = ROOT.TFile("results/Iaa_PbPb5.02TeV_results.root","read");
 fMarton    = ROOT.TFile("results/Final_Marton_graphs.root","read");
 
 Modelfiles = [
-			  "sysErrors/Signal_JEWEL_v2.0.2_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-			  "sysErrors/Signal_JEWEL_v2.0.2_KeepRecoil_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-			  "sysErrors/Signal_JEWEL_v2.0.2_sqrts2760_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-			  "sysErrors/Signal_JEWEL_v2.0.2_KeepRecoil_sqrts2760_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+			  "sysErrors/Signal_JEWEL_v2.0.2_sqrts2760_0_5_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+			  "sysErrors/Signal_JEWEL_v2.0.2_KeepRecoil_sqrts2760_0_5_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+			  "sysErrors/Signal_AMPT_LHC13f3c_JCIaa_KineOnly_pythia8230_pp5.02TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+			  #"sysErrors/Signal_JEWEL_v2.0.2_sqrts2760_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+			  #"sysErrors/Signal_JEWEL_v2.0.2_KeepRecoil_sqrts2760_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 #			  "sysErrors/Signal_GG_JEWEL_v2.0.2_KeepRecoil_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root", # no difference GG
 			  #"sysErrors/Signal_GG_JEWEL_JCIaa_KineOnly_JEWEL_vacuum_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-			  "sysErrors/Signal_AMPT_LHC13f3c_JCIaa_KineOnly_pythia8230_pp5.02TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+
 			];
 
 
 fModel = [ROOT.TFile(elm) for elm in Modelfiles];
 
 ModelLabel = [
-"~~~JEWEL ",
+"~~~JEWEL",
 "~~~JEWEL with Recoils",
-"~~~JEWEL 2.76",
-"~~~JEWEL with Recoils 2,76",
 "~~~AMPT String Melting",
+#"~~~JEWEL 2.76 0-10\%",
+#"~~~JEWEL with Recoils 2,76 0-10\%",
 #"~~~AMPT String Melting GG",
 #"~~~AMPT default"
 #,"AMPT ST Fly"
@@ -63,7 +64,7 @@ dataTypePlotParams = [
 nrow = 2;
 ncol = 2;
 xlimits = [(0.005,0.28),(0.005,0.28)];
-ylimits = [(0.3,1.8),(0.3,1.8)];
+ylimits = [(0.1,2.1),(0.1,2.1)];
 rlimits = [(0.0,1.5),(0.0,3.0)];
 
 histnames = [
@@ -83,7 +84,7 @@ ytitle = ["$I_{AA}$"];
 
 # Following two must be added
 #toptitle = "PbPb $\\sqrt{s_{NN}}$ = 5.02 TeV"; # need to add on the top
-toptitle = "PbPb 0--5\% ALICE"
+toptitle = "PbPb 0--5\% $|\\eta| < 0.8$"
 dataDetail = "$|\\eta| < 0.8$";
 
 
@@ -92,12 +93,12 @@ plot = JPyPlotRatio.JPyPlotRatio(panels=(nrow,ncol),
 	colBounds=xlimits,  # for ncol
 	panelLabel=plables,  # nrowxncol
 	ratioBounds=rlimits,# for nrow
-	#disableRatio=[0,1], # disable ratio..
+	disableRatio=[0,1], # disable ratio..
 	#ratioSystPlot=True,
 	panelLabelLoc=(0.06,0.90),panelLabelSize=10,panelLabelAlign="left",
 	#legendPanel=0,
 	#legendLoc=(0.45,0.25),
-	legendPanel={0:0,1:1},legendLoc={0:(0.27,0.20),1:(0.35,0.18)},
+	legendPanel={0:0,1:1},legendLoc={0:(0.27,0.18),1:(0.36,0.18)},
 	legendSize=9,xlabel=xtitle[0],ylabel=ytitle[0]);
 
 
@@ -111,12 +112,12 @@ for i in range(0,nrow):
 		index = i*ncol+j; # for each panel 
 		plot.GetAxes(index).set_xticks([0,0.1,0.2]);
 		grData = fData.Get("grIAADeltaEtaSig{}".format(histnames[i][j]));
-		plotMatrix[i,j] = plot.Add(index,grData,**dataTypePlotParams[0],labelLegendId=0,label="5.02 TeV");
-		grData_sys = fData.Get("grIAADeltaEtaSig{}_syst".format(histnames[i][j]));
-		_,_,_,syst = JPyPlotRatio.TGraphErrorsToNumpy(ROOT.TGraphErrors(grData_sys));
-		plot.AddSyst(plotMatrix[i,j],syst);		
+		#plotMatrix[i,j] = plot.Add(index,grData,**dataTypePlotParams[0],labelLegendId=0,label="5.02 TeV");
+		#grData_sys = fData.Get("grIAADeltaEtaSig{}_syst".format(histnames[i][j]));
+		#_,_,_,syst = JPyPlotRatio.TGraphErrorsToNumpy(ROOT.TGraphErrors(grData_sys));
+		#plot.AddSyst(plotMatrix[i,j],syst);		
 		grMarton = fMarton.Get("grIAADeltaEta{}".format(histnames[i][j]));
-		plotMatrixMarton = plot.Add(index,grMarton,**dataTypePlotParams[1],labelLegendId=0,label="2.76 TeV");
+		plotMatrixMarton = plot.Add(index,grMarton,**dataTypePlotParams[1],labelLegendId=0,label="ALICE");
 		gr_sys = fMarton.Get("grAsymmIAADeltaEtaSystPointByPoint{}".format(histnames[i][j]));
 		#gr_sys.Print();
 		plot.AddSyst(plotMatrixMarton,gr_sys);
@@ -126,12 +127,12 @@ for i in range(0,nrow):
 			fModel[im].Print();	
 			grm = fModel[im].Get("hIAADeltaEtaSig{}".format(histnames[i][j]));
 			pm = plot.AddTH1(index,grm,**dataTypePlotParams[im+2],labelLegendId=1,label=ModelLabel[im]);	
-			plot.Ratio(pm,plotMatrix[i,j],style="default"); #Calculate and plot ratio between data and theory
+			plot.Ratio(pm,plotMatrixMarton,style="default"); #Calculate and plot ratio between data and theory
 
 fData.Close();
 
-plot.GetPlot().text(0.3,0.68,toptitle,fontsize=9);
-plot.GetPlot().text(0.3,0.66,dataDetail,fontsize=9);
+plot.GetPlot().text(0.18,0.80,toptitle,fontsize=9);
+#plot.GetPlot().text(0.35,0.80,dataDetail,fontsize=9);
 #plot.GetPlot().text(0.23,0.77,strXlong[xlong],fontsize=9);
 #plot.GetAxes(3).text(0.1,0.1,dataDetail,fontsize=9);
 for i in range(4):
