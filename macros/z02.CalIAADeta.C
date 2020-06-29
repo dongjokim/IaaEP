@@ -49,16 +49,17 @@ double lowIAA = 0.0;
 double highIAA = 4.;
 
 TLatex latexRun;
-TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV";
-//Bool_t useGG = kTRUE; // for background sub
-Bool_t useGG = kFALSE; // for background sub
+TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV;//5.02 TeV";
+Bool_t useGG = kTRUE; // for background sub
+//Bool_t useGG = kFALSE; // for background sub
 
 void run1() {
 
-	const int Nsets = 2;
+	const int Nsets = 1;
 	TString infiles[Nsets] = {
-		"sysErrors/_AMPT_LHC13f3c_JCIaa_KineOnly_pythia8230_pp5.02TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+		"sysErrors/_LHC10h-AOD160_8295_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+		//"sysErrors/_AMPT_LHC13f3c_JCIaa_KineOnly_pythia8230_pp5.02TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		//"sysErrors/_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 	};
 
 	TObjArray *outString[Nsets];

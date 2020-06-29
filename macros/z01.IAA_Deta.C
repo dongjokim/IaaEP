@@ -43,18 +43,21 @@ Bool_t saveDeta = kTRUE;
 Bool_t mcTrue = kTRUE; //  RestoreTriangle
 
 void run1Data(){
-	const int NAA = 2;
+	const int NAA = 1;
 	TString fileAA[NAA] = {
-		"legotrain_JCIaa/data/JCIaa_legotrain_TPCOnly_CF_PbPb-5217_20180416-1933_runlist_3-LHC10h_AOD86_MgFpMgFm.root",
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb-5317_20180427-1405_runlist_3-LHC10h_AOD86_MgFpMgFm.root"
+		"legotrain_JCIaa/data/legotrain_CF_PbPb-JCIaa_TPCOnly_FILTER_PbPb_160_LHC10h-8295_20200523-1322_all.root"
+		//"legotrain_JCIaa/data/JCIaa_legotrain_TPCOnly_CF_PbPb-5217_20180416-1933_runlist_3-LHC10h_AOD86_MgFpMgFm.root",
+		//"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb-5317_20180427-1405_runlist_3-LHC10h_AOD86_MgFpMgFm.root"
 	};
 	TString dirAA[NAA] = {
-		"JCIAA_TPCOnly_H0_T0",
-		"JCIAA_V0C_E90"
+		"JCIAA_TPCOnly_H0_T0"
+		//"JCIAA_TPCOnly_H0_T0",
+		//"JCIAA_V0C_E90"
 	};
 	TString commentAA[NAA] = {
-		"LHC10h_AOD86_MgFpMgFm_5217",
-		"LHC10h_AOD86_MgFpMgFm_5317"
+		"LHC10h-AOD160_8295"
+		//"LHC10h_AOD86_MgFpMgFm_5217",
+		//"LHC10h_AOD86_MgFpMgFm_5317"
 	};
 
 	const int NPP = 1;
@@ -376,8 +379,8 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	cout <<"pp"<<endl;
 	cout <<"bins:  "<<" eta="<< NumEtaGaps <<" zvtx="<<nzvtx[pp]<< endl; 
 
-	int NumCent[2]    = {1,1}; // only for jewel // 5TEV data less cent 1
-	//int NumCent[2]    = { CentBinBorders[AA]->GetNoElements()-2, 1}; //{1,1}; // only for jewel // 5TEV data less cent 1
+	//int NumCent[2]    = {1,1}; // only for jewel // 5TEV data less cent 1
+	int NumCent[2]    = { CentBinBorders[AA]->GetNoElements()-2, 1}; //{1,1}; // only for jewel // 5TEV data less cent 1
 	NumEtaGaps = EtaGapThresholds[AA]->GetNoElements()-1; 
 	int NumPtt     = TriggPtBorders[AA]->GetNoElements()-1;
 	int NumPta     = AssocPtBorders[AA]->GetNoElements()-1;

@@ -40,7 +40,7 @@ ModelLabel = [
 #fAmpt    = ROOT.TFile("sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root","read");
 #fAmpt    = ROOT.TFile("sysErrors/sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root","read");
 dataTypePlotParams = [
-	{'plotType':'data','color':'r','fmt':'o','markersize':5.0},
+	{'plotType':'data','color':'k','fmt':'o','markersize':5.0},
 	{'plotType':'data','color':'k','fmt':'s','fillstyle':'none','markersize':5.0},
 	{'plotType':'theory','facecolor':'xkcd:silver','edgecolor':'xkcd:silver','alpha':0.5,'linestyle':'solid','linecolor':'xkcd:silver'},
 ];
@@ -71,7 +71,7 @@ centrality =["0-5\%","5-10\%","10-20\%","20-40\%","40-60\%"];
 xtitle = ["$|\\Delta\\eta|$"];
 ytitle = ["$I_{AA}$"];
 # Following two must be added
-toptitle = "PbPb 0--5\% ALICE"; # need to add on the top
+toptitle = "PbPb 0--5\%"; # need to add on the top
 
 dataDetail = "$|\\eta| < 0.8$";
 obsPanel = [0,1];
@@ -85,7 +85,7 @@ plot = JPyPlotRatio.JPyPlotRatio(panels=(nrow,ncol),
 	#ratioSystPlot=True,
 	panelLabelLoc=(0.06,0.90),panelLabelSize=10,panelLabelAlign="left",
 	legendPanel=0,
-	legendLoc=(0.40,0.25),
+	legendLoc=(0.25,0.25),
 	legendSize=9,xlabel=xtitle[0],ylabel=ytitle[0]);
 
 
@@ -99,12 +99,12 @@ for i in range(0,nrow):
 		index = i*ncol+j; # for each panel 
 		plot.GetAxes(index).set_xticks([0,0.1,0.2]);
 		grData = fData.Get("grIAADeltaEtaSig{}".format(histnames[i][j]));
-		plotMatrix[i,j] = plot.Add(index,grData,**dataTypePlotParams[0],label="$\\sqrt{s_{NN}}$ = 5.02 TeV");
-		grData_sys = fData.Get("grIAADeltaEtaSig{}_syst".format(histnames[i][j]));
-		_,_,_,syst = JPyPlotRatio.TGraphErrorsToNumpy(ROOT.TGraphErrors(grData_sys));
-		plot.AddSyst(plotMatrix[i,j],syst);		
+		#plotMatrix[i,j] = plot.Add(index,grData,**dataTypePlotParams[0],label="$\\sqrt{s_{NN}}$ = 5.02 TeV");
+		#grData_sys = fData.Get("grIAADeltaEtaSig{}_syst".format(histnames[i][j]));
+		#_,_,_,syst = JPyPlotRatio.TGraphErrorsToNumpy(ROOT.TGraphErrors(grData_sys));
+		#plot.AddSyst(plotMatrix[i,j],syst);		
 		grMarton = fMarton.Get("grIAADeltaEta{}".format(histnames[i][j]));
-		plotMatrixMarton = plot.Add(index,grMarton,**dataTypePlotParams[1],label="$\\sqrt{s_{NN}}$ = 2.76 TeV");
+		plotMatrixMarton = plot.Add(index,grMarton,**dataTypePlotParams[0],label="ALICE");#$\\sqrt{s_{NN}}$ = 2.76 TeV");
 		gr_sys = fMarton.Get("grAsymmIAADeltaEtaSystPointByPoint{}".format(histnames[i][j]));
 		plot.AddSyst(plotMatrixMarton,gr_sys);
 		
@@ -116,8 +116,8 @@ for i in range(0,nrow):
 
 fData.Close();
 
-plot.GetPlot().text(0.6,0.60,toptitle,fontsize=9);
-plot.GetPlot().text(0.6,0.56,dataDetail,fontsize=9);
+plot.GetPlot().text(0.31,0.605,toptitle,fontsize=9);
+plot.GetPlot().text(0.31,0.57,dataDetail,fontsize=9);
 #plot.GetPlot().text(0.23,0.77,strXlong[xlong],fontsize=9);
 #plot.GetAxes(3).text(0.1,0.1,dataDetail,fontsize=9);
 for i in range(4):
